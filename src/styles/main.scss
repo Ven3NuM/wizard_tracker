@@ -4,94 +4,85 @@
 @import url('https://fonts.googleapis.com/css?family=Bangers|Ubuntu&display=swap');
 
 // End Imports
-$main-bg: hsl(79, 59%, 50%);
-$secondary-bg: hsl(79, 59%, 45%);
+$main-color: hsl(79, 59%, 50%);
+$secondary-color: hsl(79, 59%, 45%);
+$dark-color: hsl(214, 17%, 25%);
+$white-color: hsl(45, 60%, 96%);
+$label-color: hsl(79, 25%, 43%);
+$error-color: hsl(358, 73%, 58%);
 
-$main-c: #353E4A;
-$secondary-c: #FBF8EF;
 /* General */
-*,
-*:before,
-*:after {
-    box-sizing: inherit;
-}
-body{
-    margin:0;
-    padding:0;
-    position: relative;
-    // font-family: 'Roboto', sans-serif;
-    font-family: 'Bangers', cursive;
-    font-family: 'Ubuntu', sans-serif;
-    color:#333;
-    min-height: 100vh;
-    box-sizing: border-box;
-    overflow-x: hidden;
-}
-h1,h2,h3,h4,h5,h6{
-    font-weight: normal;
-    margin:0;
-    padding:0;
-}
-a,a:hover,a:focus{
-    color: inherit;
-    text-decoration: none;
-    cursor: pointer;
-}
-p{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-}
-img {
-    max-width: 100%;
-    height: auto;
-}
-label{
-    font-weight: normal;
-    margin:0;
-}
-button{
-    background-color: transparent;
-    border:none;
-    box-shadow: none;
-}
-select{
-    border:none;
-    border-radius: 0;
-    -webkit-appearance: none;
-}
+*,*:before,*:after {box-sizing: inherit;}
+body{margin:0;padding:0;position: relative;font-family: 'Bangers', cursive;font-family: 'Ubuntu', sans-serif;color:#333;min-height: 100vh;box-sizing: border-box;overflow-x: hidden;}
+h1,h2,h3,h4,h5,h6{font-weight: normal;margin:0;padding:0;}
+a,a:hover,a:focus{color: inherit;text-decoration: none;cursor: pointer;}
+p{margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;}
+img {max-width: 100%;height: auto;}
+label{font-weight: normal;margin:0;}
+button{background-color: transparent;border:none;box-shadow: none!important;outline: none!important;}
+select{border:none;border-radius: 0;-webkit-appearance: none;}
 
 /* Custom CSS */
 main{
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    background: $main-bg;
-    background-image: linear-gradient(30deg, $secondary-bg, $main-bg);
+    min-height: 100vh;
+    background: $main-color;
+    background-image: linear-gradient(30deg, $dark-color, $dark-color);
 }
 main,
-main form{
+main form{width: 100%;float: left;position: relative;}
+.main__wrapper{width: 100%;float: left;position: relative;height: auto;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;}
+
+.main__wrapper h1{
+    width: 50%;
+    float: left;
+    text-align: center;
+    color: $main-color;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 600;
+    margin:50px 0;
+}
+
+// Number of players
+.wrapper__players{width: 100%;float: left;position: relative;}
+.wrapper__players label{width:100%;float: left;position: relative;color: $label-color;}
+.wrapper__players .btn-group{display: block;}
+.wrapper__players button {background: $white-color;border-color: #444;color: $dark-color;float: left;width: 25%;max-width: 100px;}
+.wrapper__players button:hover{color: $main-color}
+.wrapper__players button.active{background: $main-color;color: $dark-color;font-weight: 400;}
+
+// List Of players
+.init_players{
     width: 100%;
     float: left;
     position: relative;
-}
-.main__wrapper{
-    width: 50%;
-    float: left;
-    position: relative;
-    height: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+    margin:15px 0px;
 }
 
-main h1{
-    color: $secondary-c;
-    // text-shadow: 1px 1px $main-c;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 600;
+ul#listOfPlayers{padding-inline-start:0px;list-style-type: none;}
+ul#listOfPlayers li.playerName{width: 100%;float: left;position: relative;}
+ul#listOfPlayers li.playerName + li.playerName{margin-top: 5px;}
+
+label.playerName__label{width: 100%;float: left;margin-bottom: 5px;color: $label-color;}
+input.playerName__input{
+    width: 100%;
+    height: 40px;
+    float: left;
+    padding: 0px 15px;
+    background-color: $white-color;
+    border-radius: 5px;
+    border:none;
+    outline: none;
+}
+
+span.playerName__help{display: none;color:$error-color;}
+label.playerName__label.invalid + span.playerName__help{display: block;}
+
+// Action Buttons
+.wrapper__buttons button#start {
+    padding: 5px 15px;
+    background: $main-color;
+    border-radius: 5px;
+    border: 3px solid $main-color;
+    color: $dark-color;
+    transition: all 250ms linear;
 }
