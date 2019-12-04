@@ -1,19 +1,19 @@
 @import "~bootstrap/scss/bootstrap";
 
 /* Fonts */
-@import url('https://fonts.googleapis.com/css?family=Bangers|Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Bangers|Ubuntu|Roboto&display=swap');
 
 // End Imports
 $main-color: hsl(79, 59%, 50%);
 $secondary-color: hsl(79, 59%, 45%);
 $dark-color: hsl(214, 17%, 25%);
 $white-color: hsl(45, 60%, 96%);
-$label-color: hsl(79, 25%, 43%);
+$label-color: hsla(79, 59%, 50%, 0.8);
 $error-color: hsl(358, 73%, 58%);
 
 /* General */
 *,*:before,*:after {box-sizing: inherit;}
-body{margin:0;padding:0;position: relative;font-family: 'Bangers', cursive;font-family: 'Ubuntu', sans-serif;color:#333;min-height: 100vh;box-sizing: border-box;overflow-x: hidden;}
+body{margin:0;padding:0;position: relative;font-family: 'Bangers', cursive;font-family: 'Ubuntu', sans-serif;font-family: 'Roboto', sans-serif;color:#333;min-height: 100vh;box-sizing: border-box;overflow-x: hidden;}
 h1,h2,h3,h4,h5,h6{font-weight: normal;margin:0;padding:0;}
 a,a:hover,a:focus{color: inherit;text-decoration: none;cursor: pointer;}
 p{margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;}
@@ -30,14 +30,14 @@ main{
 }
 main,
 main form{width: 100%;float: left;position: relative;}
-.main__wrapper{width: 100%;float: left;position: relative;height: auto;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;}
+.main__wrapper{width: 100%;float: left;position: relative;height: auto;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;padding: 50px 0px;}
 
 .main__wrapper h1{
     width: 50%;
     float: left;
     text-align: center;
     color: $main-color;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 600;
     margin:50px 0;
 }
@@ -58,9 +58,13 @@ main form{width: 100%;float: left;position: relative;}
     margin:15px 0px;
 }
 
-ul#listOfPlayers{padding-inline-start:0px;list-style-type: none;}
+ul#listOfPlayers{padding-inline-start:0px;list-style-type: none;float: left;position: relative;margin-bottom: 0px;}
 ul#listOfPlayers li.playerName{width: 100%;float: left;position: relative;}
 ul#listOfPlayers li.playerName + li.playerName{margin-top: 5px;}
+
+ul#listOfPlayers li:nth-child(4),
+ul#listOfPlayers li:nth-child(5),
+ul#listOfPlayers li:nth-child(6){display: none;}
 
 label.playerName__label{width: 100%;float: left;margin-bottom: 5px;color: $label-color;}
 input.playerName__input{
@@ -72,17 +76,38 @@ input.playerName__input{
     border-radius: 5px;
     border:none;
     outline: none;
+    //border-bottom: 3px solid transparent;
 }
+//input.playerName__input.valid{border-color: $main-color}
+//input.playerName__input.invalid{border-color: $error-color}
+
+label.playerName__label span.valid--hide,
+label.playerName__label span.invalid--hide{
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 0px;
+    border-left: 1px solid rgba(0,0,0,0.1);
+    display: none;
+}
+
+label.playerName__label span.valid--hide{color: $main-color}
+label.playerName__label span.invalid--hide{color: $error-color}
+
+input.playerName__input.valid + span + span.valid--hide{display: inline-flex;}
+input.playerName__input.valid + span.invalid--hide{display: none;}
+input.playerName__input.invalid + span + span.valid--hide{display: none;}
+input.playerName__input.invalid + span.invalid--hide{display: inline-flex;}
 
 span.playerName__help{display: none;color:$error-color;}
 label.playerName__label.invalid + span.playerName__help{display: block;}
 
 // Action Buttons
-.wrapper__buttons button#start {
-    padding: 5px 15px;
-    background: $main-color;
-    border-radius: 5px;
-    border: 3px solid $main-color;
-    color: $dark-color;
-    transition: all 250ms linear;
-}
+.wrapper__buttons {width: 100%;float: left;position: relative;display: flex;align-items: center;justify-content: flex-end;}
+.wrapper__buttons button#start {padding: 5px 15px;background: $main-color;border-radius: 5px;border: 3px solid $main-color;font-family: 'Bangers', cursive;color: $dark-color;transition: all 250ms linear;}
