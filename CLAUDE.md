@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Wizard Tracker is a React-based web application for tracking scores in the Wizard card game. It supports 3-6 players with dynamic round counts based on player count (3 players = 20 rounds, 4 players = 15 rounds, 5 players = 10 rounds, 6 players = 5 rounds).
+Wizard Tracker is a React-based web application for tracking scores in the Wizard card game. It supports 3-6 players with dynamic round counts based on player count (60 cards / number of players: 3 players = 20 rounds, 4 players = 15 rounds, 5 players = 12 rounds, 6 players = 10 rounds).
 
 ## Development Commands
 
@@ -36,52 +36,61 @@ npm run build
 
 ```
 src/
-├── components/       # React components
-│   ├── Settings.jsx
-│   ├── NumberOfPlayers.jsx
-│   ├── InitPlayersList.jsx
-│   └── InitPlayer.jsx
-├── hooks/           # Custom React hooks (future)
-├── context/         # React Context for global state (future)
-├── utils/           # Helper functions (future)
-├── styles/          # CSS files
-│   └── index.css
-├── App.jsx          # Root component
-└── main.jsx         # Entry point with ReactDOM
+├── components/
+│   ├── Settings.jsx          # Setup: player count, names, hook rule option, Start game
+│   ├── NumberOfPlayers.jsx   # 3-6 player button group
+│   ├── InitPlayersList.jsx   # List of name inputs
+│   ├── InitPlayer.jsx        # Single controlled name input
+│   ├── Game.jsx              # Game screen: round entry or final results + scoreboard
+│   ├── RoundEntry.jsx        # Current round, bids phase then tricks phase
+│   ├── Scoreboard.jsx        # Rounds x players table, tap a row to edit
+│   ├── EditRound.jsx         # Bottom-sheet overlay to fix a finished round
+│   ├── FinalResults.jsx      # Ranking after the last round
+│   └── Stepper.jsx           # − value + control, 0..max
+├── hooks/
+│   └── useGame.js            # useReducer game state, persisted to localStorage
+├── i18n/
+│   ├── el.js                 # Greek UI strings (only language for now)
+│   └── index.js              # Exports `t` and `errorMessage(error)`
+├── utils/
+│   └── scoring.js            # Pure game rules: rounds, dealer, scores, validation
+├── styles/
+│   ├── app.css               # Imports globals.css + index.css
+│   ├── globals.css           # CSS custom properties
+│   └── index.css             # Component styles (mobile first)
+├── App.jsx                   # Settings when no game, otherwise Game
+└── main.jsx                  # Entry point
 ```
 
-### Component Structure
+### Game rules (utils/scoring.js)
 
-The application uses **functional components** with React hooks:
+- Round index `r` (0-based) deals `r + 1` cards. Total rounds = 60 / players.
+- Player 1 deals round 1, then the deal rotates. Bidding starts left of the dealer, dealer bids last.
+- Players are always listed in seat order (as entered); the round entry marks the dealer and who bids first with badges.
+- Score: exact bid → `20 + 10 × tricks`, otherwise `−10 × |bid − tricks|`.
+- Bids may add up to more or less than the cards dealt (only the hook rule restricts the total). Each bid is 0..cards.
+- Tricks in a round must add up to the cards dealt. Bids and tricks start at 0; while tricks are below the cards the UI shows a neutral "remaining" hint, only an excess is shown as an error.
+- Hook rule (optional, chosen in Settings): bids may not add up to the cards dealt.
 
-- **main.jsx** - Entry point using `ReactDOM.createRoot()` (React 18+)
-- **App.jsx** - Root component wrapper
-- **Settings.jsx** - Main settings component managing state with `useState` hook
-- **NumberOfPlayers.jsx** - Button group for selecting 3-6 players
-- **InitPlayersList.jsx** - Renders list of player inputs using `.map()`
-- **InitPlayer.jsx** - Controlled input component for individual players
+### State (hooks/useGame.js)
 
-### State Management
+State is `{ lastSetup, game }`, saved to `localStorage` under `wizard-tracker` so a refresh resumes the game.
 
-State is managed using React's `useState` hook in the Settings component:
-
-- `numOfPlayers` - Current number of players (default: 3)
-- `players` - Array of player names (string[])
-
-State flows down via props, and changes flow up via callback functions:
-```jsx
-Settings (state)
-  ↓ props
-NumberOfPlayers → onPlayerCountChange callback → Updates Settings state
-InitPlayersList → onPlayerNameChange callback → Updates Settings state
+```js
+game = {
+  players: string[],
+  hookRule: boolean,
+  rounds: [{ bids: number[], tricks: number[] }],             // finished rounds only
+  current: { phase: 'bids' | 'tricks', bids, tricks } | null, // null = game over
+}
 ```
 
-### Key React Concepts Used
+Only user input is stored; scores, totals, dealer and round number are derived with `utils/scoring.js`. Actions: `START_GAME`, `SET_BID`, `CONFIRM_BIDS` (tricks start at 0), `BACK_TO_BIDS`, `SET_TRICKS`, `FINISH_ROUND`, `UPDATE_ROUND`, `NEW_GAME` (keeps `lastSetup` to prefill Settings). Validation happens in the UI, the reducer trusts its input.
 
-1. **Functional Components** - Modern component syntax
-2. **useState Hook** - State management without classes
-3. **Props** - Data passed from parent to child
-4. **Controlled Components** - Form inputs controlled by React state
-5. **Lifting State Up** - Shared state lives in common parent
-6. **Lists & Keys** - Rendering arrays with unique keys
-7. **Event Handling** - onClick, onChange callbacks
+### Language
+
+The UI is Greek. All user-facing text lives in `src/i18n/el.js`; components import `t` from `../i18n` and never hardcode strings. Validation functions return `{ type, ...data }` objects, and `errorMessage()` maps them to text via `t.errors[type]`. English is planned: add `en.js` with the same keys and a language switch.
+
+Fonts must support Greek (Bangers was dropped for this reason); headings and buttons use Fira Sans Extra Condensed 600.
+
+`.eslintrc.cjs` uses `plugin:react/jsx-runtime`, so components don't import `React`.

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Bangers|Ubuntu|Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@600&family=Roboto&family=Ubuntu&display=swap');
 
 :root{
 /*******************/
@@ -233,12 +233,12 @@
 	--ff-text-500:					var(--ff-500);
 	--ff-text:						var(--ff-400);
 
-    --main-color: hsl(79, 59%, 50%);
-	--secondary-color: hsl(79, 59%, 45%);
-	--dark-color: hsl(214, 17%, 25%);
-	--white-color: hsl(45, 60%, 96%);
-	--label-color: hsla(79, 59%, 50%, 0.8);
-	--error-color: hsl(358, 73%, 58%);
+    --main-color: 					hsl(79, 59%, 50%);
+	--secondary-color: 				hsl(79, 59%, 45%);
+	--dark-color: 					hsl(214, 17%, 25%);
+	--white-color: 					hsl(45, 60%, 96%);
+	--label-color: 					hsla(79, 59%, 50%, 0.8);
+	--error-color: 					hsl(358, 73%, 58%);
 
     /***************/
     /* Init Colors */
@@ -284,7 +284,7 @@
 	/* Typography ******/
 	/*******************/
 	/* Family */
-	--ff-h-400:						'Bangers', sans-serif;
+	--ff-h-400:						'Fira Sans Extra Condensed', sans-serif;
 	--ff-400:						'Ubuntu', sans-serif;
 
 	--ff-heading:					var(--ff-h-400);

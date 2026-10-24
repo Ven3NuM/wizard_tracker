@@ -1,17 +1,21 @@
-import React from 'react'
 import Settings from './components/Settings'
+import Game from './components/Game'
+import { useGame } from './hooks/useGame'
 
-/**
- * LESSON: This is a Functional Component (modern React)
- * - Simpler syntax than class components
- * - Use hooks for state and lifecycle
- * - This is now the recommended way to write React
- */
 function App() {
+  const [{ game, lastSetup }, dispatch] = useGame()
+
   return (
     <div className="main__wrapper">
       <h1>Wizard Tracker</h1>
-      <Settings />
+      {game ? (
+        <Game game={game} dispatch={dispatch} />
+      ) : (
+        <Settings
+          initialSetup={lastSetup}
+          onStart={(players, hookRule) => dispatch({ type: 'START_GAME', players, hookRule })}
+        />
+      )}
     </div>
   )
 }

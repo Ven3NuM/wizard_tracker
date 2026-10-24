@@ -1,43 +1,48 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import NumberOfPlayers from './NumberOfPlayers'
 import InitPlayersList from './InitPlayersList'
+import { errorMessage, t } from '../i18n'
 
-/**
- * LESSON: useState Hook
- *
- * Instead of class component with constructor and this.state:
- *   constructor() { this.state = { count: 0 } }
- *
- * We use useState:
- *   const [count, setCount] = useState(0)
- *
- * - First value (count) is the current state
- * - Second value (setCount) is the function to update it
- * - useState(0) sets the initial value
- */
-function Settings() {
-  // State: Number of players (3-6)
-  const [numOfPlayers, setNumOfPlayers] = useState(3)
+function validatePlayers(names) {
+  if (names.some((name) => name === '')) {
+    return { type: 'missingName' }
+  }
+  const lower = names.map((name) => name.toLowerCase())
+  if (new Set(lower).size !== lower.length) {
+    return { type: 'duplicateName' }
+  }
+  return null
+}
 
-  // State: Array to store player names
-  const [players, setPlayers] = useState(Array(3).fill(''))
+function Settings({ initialSetup, onStart }) {
+  const initialPlayers = initialSetup?.players ?? Array(3).fill('')
+  const [numOfPlayers, setNumOfPlayers] = useState(initialPlayers.length)
+  const [players, setPlayers] = useState(initialPlayers)
+  const [hookRule, setHookRule] = useState(initialSetup?.hookRule ?? false)
+  const [error, setError] = useState(null)
 
-  /**
-   * LESSON: Callback Functions as Props
-   * We pass this function down to child components
-   * so they can update the parent's state
-   */
   const handlePlayerCountChange = (count) => {
     setNumOfPlayers(count)
-    // Resize the players array when count changes
-    setPlayers(Array(count).fill(''))
+    // Keep already typed names, pad or trim to the new count
+    setPlayers((prev) =>
+      Array.from({ length: count }, (_, i) => prev[i] ?? '')
+    )
+    setError(null)
   }
 
   const handlePlayerNameChange = (index, name) => {
-    // LESSON: Always create new arrays/objects, don't mutate state
-    const newPlayers = [...players] // Spread operator creates a copy
-    newPlayers[index] = name
-    setPlayers(newPlayers)
+    setPlayers((prev) => prev.map((p, i) => (i === index ? name : p)))
+    setError(null)
+  }
+
+  const handleStart = () => {
+    const names = players.map((name) => name.trim())
+    const validationError = validatePlayers(names)
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+    onStart(names, hookRule)
   }
 
   return (
@@ -50,6 +55,19 @@ function Settings() {
         players={players}
         onPlayerNameChange={handlePlayerNameChange}
       />
+      <label className="settings__option">
+        <input type="checkbox" checked={hookRule} onChange={(e) => setHookRule(e.target.checked)} />
+        <span>
+          {t.hookRule}
+          <small>{t.hookRuleHelp}</small>
+        </span>
+      </label>
+      {error && <p className="settings__error">{errorMessage(error)}</p>}
+      <div className="wrapper__buttons">
+        <button type="button" id="start" onClick={handleStart}>
+          {t.startGame}
+        </button>
+      </div>
     </div>
   )
 }
