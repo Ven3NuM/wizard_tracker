@@ -11,17 +11,20 @@ const newRound = (numPlayers) => ({
 
 const setAt = (values, index, value) => values.map((v, i) => (i === index ? value : v))
 
-function reducer(state, action) {
+const startGame = ({ players, hookRule, firstDealer }) => ({
+  lastSetup: { players, hookRule, firstDealer },
+  game: { players, hookRule, firstDealer, rounds: [], current: newRound(players.length) },
+})
+
+export function reducer(state, action) {
   const { game } = state
 
   switch (action.type) {
-    case 'START_GAME': {
-      const { players, hookRule } = action
-      return {
-        lastSetup: { players, hookRule },
-        game: { players, hookRule, rounds: [], current: newRound(players.length) },
-      }
-    }
+    case 'START_GAME':
+      return startGame(action)
+    case 'REMATCH':
+      // Same table, the deal starts one seat to the left of last game's first dealer
+      return startGame({ ...game, firstDealer: (game.firstDealer + 1) % game.players.length })
     case 'SET_BID':
       return {
         ...state,
@@ -66,6 +69,10 @@ function reducer(state, action) {
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
+    if (saved?.game) {
+      // Older saves had no first dealer, player 1 always dealt first
+      saved.game.firstDealer ??= 0
+    }
     if (saved?.game?.current) {
       // Older saves used null for values not entered yet
       const { current } = saved.game

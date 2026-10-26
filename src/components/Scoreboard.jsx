@@ -26,7 +26,12 @@ function Scoreboard({ players, rounds, current, onEditRound }) {
         <tbody>
           {rows.map((cells, r) => (
             <tr key={r} className="scoreboard__row" onClick={() => onEditRound(r)}>
-              <td className="scoreboard__round">{r + 1}</td>
+              <td className="scoreboard__round">
+                {/* The whole row is tappable, the button makes it reachable by keyboard */}
+                <button type="button" className="scoreboard__edit" aria-label={t.editRound(r + 1)}>
+                  {r + 1}
+                </button>
+              </td>
               {cells.map((cell, p) => (
                 <td key={p}>
                   <span className="scoreboard__cell-total">{cell.total}</span>

@@ -1,2 +1,10 @@
+/* Fonts are bundled so the app works offline, only the Latin and Greek subsets */
+@import '@fontsource/fira-sans-extra-condensed/latin-600.css';
+@import '@fontsource/fira-sans-extra-condensed/greek-600.css';
+@import '@fontsource/ubuntu/latin-400.css';
+@import '@fontsource/ubuntu/greek-400.css';
+@import '@fontsource/roboto/latin-700.css';
+@import '@fontsource/roboto/greek-700.css';
+
 @import url(globals.css);
 @import url(index.css);

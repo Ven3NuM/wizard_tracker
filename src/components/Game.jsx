@@ -7,12 +7,13 @@ import { cardsForRound, dealerForRound, totalRounds } from '../utils/scoring'
 import { t } from '../i18n'
 
 function Game({ game, dispatch }) {
-  const { players, rounds, current, hookRule } = game
+  const { players, rounds, current, hookRule, firstDealer } = game
   const [editing, setEditing] = useState(null)
   const roundIndex = rounds.length
 
   const handleNewGame = () => {
-    if (window.confirm(t.confirmNewGame)) {
+    // A finished game has nothing left to lose
+    if (!current || window.confirm(t.confirmNewGame)) {
       dispatch({ type: 'NEW_GAME' })
     }
   }
@@ -31,10 +32,17 @@ function Game({ game, dispatch }) {
               roundIndex + 1,
               totalRounds(players.length),
               cardsForRound(roundIndex),
-              players[dealerForRound(roundIndex, players.length)]
+              players[dealerForRound(roundIndex, players.length, firstDealer)]
             )}
           </p>
-          <RoundEntry players={players} roundIndex={roundIndex} current={current} hookRule={hookRule} dispatch={dispatch} />
+          <RoundEntry
+            players={players}
+            roundIndex={roundIndex}
+            current={current}
+            hookRule={hookRule}
+            firstDealer={firstDealer}
+            dispatch={dispatch}
+          />
         </>
       ) : (
         <FinalResults players={players} rounds={rounds} />
@@ -46,6 +54,11 @@ function Game({ game, dispatch }) {
         <button type="button" className="btn-secondary" onClick={handleNewGame}>
           {t.newGame}
         </button>
+        {!current && (
+          <button type="button" onClick={() => dispatch({ type: 'REMATCH' })}>
+            {t.rematch}
+          </button>
+        )}
       </div>
 
       {editing !== null && (
@@ -54,6 +67,7 @@ function Game({ game, dispatch }) {
           roundIndex={editing}
           round={rounds[editing]}
           hookRule={hookRule}
+          firstDealer={firstDealer}
           onSave={handleSaveRound}
           onCancel={() => setEditing(null)}
         />

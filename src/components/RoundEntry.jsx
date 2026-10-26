@@ -10,17 +10,19 @@ import {
 } from '../utils/scoring'
 import { errorMessage, t } from '../i18n'
 
-function RoundEntry({ players, roundIndex, current, hookRule, dispatch }) {
+function RoundEntry({ players, roundIndex, current, hookRule, firstDealer, dispatch }) {
   const cards = cardsForRound(roundIndex)
-  const dealer = dealerForRound(roundIndex, players.length)
-  const firstBidder = biddingOrder(roundIndex, players.length)[0]
+  const dealer = dealerForRound(roundIndex, players.length, firstDealer)
+  const firstBidder = biddingOrder(roundIndex, players.length, firstDealer)[0]
   const isBids = current.phase === 'bids'
 
   const values = isBids ? current.bids : current.tricks
-  const error = isBids ? bidsError(current.bids, roundIndex, hookRule) : tricksError(current.tricks, roundIndex)
+  const error = isBids
+    ? bidsError(current.bids, roundIndex, hookRule, firstDealer)
+    : tricksError(current.tricks, roundIndex)
   // Fewer tricks than cards just means they're not all entered yet
   const remaining = error?.type === 'tricksSum' && error.total < cards ? cards - error.total : 0
-  const forbidden = isBids && hookRule ? forbiddenDealerBid(current.bids, roundIndex) : null
+  const forbidden = isBids && hookRule ? forbiddenDealerBid(current.bids, roundIndex, firstDealer) : null
 
   const handleChange = (player, value) =>
     dispatch({ type: isBids ? 'SET_BID' : 'SET_TRICKS', player, value })
@@ -44,7 +46,12 @@ function RoundEntry({ players, roundIndex, current, hookRule, dispatch }) {
               {!isBids && <span className="round__hint">{t.bidHint(current.bids[p])}</span>}
               {p === dealer && forbidden !== null && <span className="round__hint">{t.forbiddenHint(forbidden)}</span>}
             </span>
-            <Stepper value={values[p]} max={cards} onChange={(value) => handleChange(p, value)} />
+            <Stepper
+              label={`${name}, ${isBids ? t.bidColumn : t.tricksColumn}`}
+              value={values[p]}
+              max={cards}
+              onChange={(value) => handleChange(p, value)}
+            />
           </li>
         ))}
       </ul>

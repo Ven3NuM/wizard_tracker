@@ -5,12 +5,13 @@ export const totalRounds = (numPlayers) => TOTAL_CARDS / numPlayers
 // Round n (0-based index) deals n + 1 cards
 export const cardsForRound = (roundIndex) => roundIndex + 1
 
-// Player 1 deals the first round, then the deal moves one seat each round
-export const dealerForRound = (roundIndex, numPlayers) => roundIndex % numPlayers
+// The chosen first dealer deals round 1, then the deal moves one seat each round
+export const dealerForRound = (roundIndex, numPlayers, firstDealer = 0) =>
+  (firstDealer + roundIndex) % numPlayers
 
 // Bidding starts left of the dealer, the dealer bids last
-export const biddingOrder = (roundIndex, numPlayers) => {
-  const dealer = dealerForRound(roundIndex, numPlayers)
+export const biddingOrder = (roundIndex, numPlayers, firstDealer = 0) => {
+  const dealer = dealerForRound(roundIndex, numPlayers, firstDealer)
   return Array.from({ length: numPlayers }, (_, i) => (dealer + 1 + i) % numPlayers)
 }
 
@@ -20,16 +21,16 @@ export const roundScore = (bid, tricks) =>
   bid === tricks ? 20 + 10 * tricks : -10 * Math.abs(bid - tricks)
 
 // The bid that would make the total equal the cards, given the other players' bids
-export const forbiddenDealerBid = (bids, roundIndex) => {
-  const dealer = dealerForRound(roundIndex, bids.length)
+export const forbiddenDealerBid = (bids, roundIndex, firstDealer = 0) => {
+  const dealer = dealerForRound(roundIndex, bids.length, firstDealer)
   const others = bids.filter((_, i) => i !== dealer)
   const forbidden = cardsForRound(roundIndex) - sum(others)
   return forbidden >= 0 ? forbidden : null
 }
 
-export const bidsError = (bids, roundIndex, hookRule) => {
+export const bidsError = (bids, roundIndex, hookRule, firstDealer = 0) => {
   if (hookRule && sum(bids) === cardsForRound(roundIndex)) {
-    return { type: 'hook', forbidden: forbiddenDealerBid(bids, roundIndex) }
+    return { type: 'hook', forbidden: forbiddenDealerBid(bids, roundIndex, firstDealer) }
   }
   return null
 }

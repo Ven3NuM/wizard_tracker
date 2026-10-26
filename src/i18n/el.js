@@ -1,12 +1,17 @@
 const cardsLabel = (n) => `${n} ${n === 1 ? 'φύλλο' : 'φύλλα'}`
 
 const el = {
+  appTitle: 'Wizard Tracker',
+
   // Settings
   numberOfPlayers: 'Αριθμός παικτών',
   playerLabel: (n) => `Παίκτης ${n}:`,
+  playerFallback: (n) => `Παίκτης ${n}`,
   playerPlaceholder: 'Όνομα παίκτη',
   hookRule: 'Κανόνας hook',
   hookRuleHelp: 'Ο dealer δεν μπορεί να δηλώσει έτσι ώστε οι δηλώσεις να είναι ίσες με τα φύλλα.',
+  firstDealer: 'Πρώτος dealer',
+  drawDealer: 'Κλήρωση',
   startGame: 'Έναρξη',
 
   // Game
@@ -14,6 +19,7 @@ const el = {
     `Γύρος ${round} / ${total} · ${cardsLabel(cards)} · Dealer: ${dealer}`,
   newGame: 'Νέο παιχνίδι',
   confirmNewGame: 'Νέο παιχνίδι; Το τρέχον σκορ θα χαθεί.',
+  rematch: 'Ρεβάνς',
 
   // Round entry
   bidsTitle: 'Δηλώσεις',
@@ -34,6 +40,11 @@ const el = {
   tricksColumn: 'Μπάζες',
   cancel: 'Άκυρο',
   save: 'Αποθήκευση',
+  discardChanges: 'Να απορριφθούν οι αλλαγές;',
+
+  // Stepper, read by screen readers
+  decrease: (label) => `${label}: μείωση`,
+  increase: (label) => `${label}: αύξηση`,
 
   // Scoreboard
   bidShort: (n) => `δήλ. ${n}`,

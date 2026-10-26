@@ -10,8 +10,6 @@
 body{
     position: relative;
     font-family: var(--ff-text);
-    /* font-family: 'Ubuntu', sans-serif; */
-    /* font-family: 'Roboto', sans-serif; */
     color:#333;
     min-height: 100vh;
     overflow-x: hidden;
@@ -33,7 +31,10 @@ a:focus{
 }
 img{max-width: 100%;height: auto;}
 label{font-weight: normal;margin:0;}
-button{background-color: transparent;border:none;box-shadow: none!important;outline: none!important;}
+button{background-color: transparent;border:none;box-shadow: none!important;font-family: inherit;}
+:focus-visible{outline: 2px solid var(--main-color);outline-offset: 2px;}
+input:focus-visible,
+select:focus-visible{outline-offset: 0;}
 
 /* Custom CSS */
 body{
@@ -44,7 +45,7 @@ body{
 }
 
 .main__wrapper{width: 100%;max-width: 720px;margin: 0 auto;height: auto;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;padding: 50px 16px;}
-.main__wrapper h1{width: 100%;float: left;text-align: center;color: var(--main-color);font-family: 'Roboto', sans-serif;font-weight: 600;margin:50px 0;}
+.main__wrapper h1{width: 100%;float: left;text-align: center;color: var(--main-color);font-family: var(--ff-title);font-weight: 700;margin:50px 0;}
 
 /* Number of players*/
 .wrapper__players{width: 100%;float: left;position: relative;display: flex;justify-content: center;flex-wrap: wrap;}
@@ -77,12 +78,11 @@ input.playerName__input{
     background-color: var(--white-color);
     border-radius: 4px;
     border:none;
-    outline: none;
 }
 
 /* Action Buttons */
 .wrapper__buttons {width: 100%;float: left;position: relative;display: flex;align-items: center;justify-content: flex-end;}
-.wrapper__buttons button {padding: 5px 15px;background: var(--main-color);border-radius: 5px;border: 3px solid var(--main-color);font-family: 'Fira Sans Extra Condensed', sans-serif;font-weight: 600;font-size: 1.25rem;letter-spacing: 0.05em;color: var(--dark-color);cursor: pointer;transition: all 250ms linear;}
+.wrapper__buttons button {padding: 5px 15px;background: var(--main-color);border-radius: 5px;border: 3px solid var(--main-color);font-family: var(--ff-heading);font-weight: 600;font-size: 1.25rem;letter-spacing: 0.05em;color: var(--dark-color);cursor: pointer;transition: all 250ms linear;}
 .wrapper__buttons button:hover {background: transparent;color: var(--main-color);}
 
 .wrapper__buttons {gap: 10px;}
@@ -98,6 +98,12 @@ input.playerName__input{
 .settings__option input {width: 20px;height: 20px;margin-top: 2px;accent-color: var(--main-color);flex-shrink: 0;}
 .settings__option small {display: block;color: var(--label-color);font-size: 0.8rem;margin-top: 2px;}
 .settings__error {width: 100%;float: left;text-align: center;color: var(--error-color);margin-bottom: 15px;}
+.settings__dealer {width: 100%;max-width: 360px;margin: 0 auto 20px;}
+.settings__dealer label {display: block;margin-bottom: 5px;color: var(--label-color);}
+.settings__dealer-row {display: flex;gap: 8px;}
+.settings__dealer select {flex: 1;min-width: 0;height: 40px;padding: 0 10px;background-color: var(--white-color);border-radius: 4px;border: none;font-family: inherit;font-size: 1rem;color: var(--dark-color);}
+.settings__dealer button {padding: 0 14px;border-radius: 4px;border: 2px solid var(--main-color);color: var(--main-color);font-family: var(--ff-heading);font-weight: 600;font-size: 1rem;letter-spacing: 0.05em;cursor: pointer;}
+.settings__dealer button:hover {background: var(--main-color);color: var(--dark-color);}
 
 /* Game */
 .game {width: 100%;}
@@ -111,8 +117,8 @@ input.playerName__input{
 
 /* Round entry */
 .round {width: 100%;background: rgba(255, 255, 255, 0.05);border-radius: 8px;padding: 16px;margin-bottom: 20px;}
-.round__title {display: flex;justify-content: space-between;align-items: baseline;font-family: 'Fira Sans Extra Condensed', sans-serif;font-weight: 600;font-size: 1.5rem;letter-spacing: 0.05em;color: var(--main-color);margin-bottom: 10px;}
-.round__total {font-family: 'Ubuntu', sans-serif;font-size: 1rem;color: var(--white-color);}
+.round__title {display: flex;justify-content: space-between;align-items: baseline;font-family: var(--ff-heading);font-weight: 600;font-size: 1.5rem;letter-spacing: 0.05em;color: var(--main-color);margin-bottom: 10px;}
+.round__total {font-family: var(--ff-text);font-size: 1rem;color: var(--white-color);}
 .round__players {list-style-type: none;}
 .round__player {display: flex;align-items: center;justify-content: space-between;gap: 10px;padding: 8px 0;}
 .round__player + .round__player {border-top: 1px solid rgba(255, 255, 255, 0.08);}
@@ -146,6 +152,7 @@ input.playerName__input{
 .scoreboard__detail.is-hit {color: var(--main-color);}
 .scoreboard__detail.is-miss {color: var(--error-color);}
 .scoreboard__note {text-align: center;font-size: 0.8rem;color: var(--label-color);margin-top: 8px;}
+.scoreboard__edit {width: 100%;padding: 4px 0;color: inherit;font-size: inherit;cursor: pointer;}
 
 /* Edit round overlay */
 .overlay {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.6);display: flex;align-items: flex-end;justify-content: center;z-index: 10;}
@@ -153,7 +160,7 @@ input.playerName__input{
 
 /* Final results */
 .results {width: 100%;margin-bottom: 20px;}
-.results__title {text-align: center;font-family: 'Fira Sans Extra Condensed', sans-serif;font-weight: 600;font-size: 2rem;letter-spacing: 0.05em;color: var(--main-color);margin-bottom: 10px;}
+.results__title {text-align: center;font-family: var(--ff-heading);font-weight: 600;font-size: 2rem;letter-spacing: 0.05em;color: var(--main-color);margin-bottom: 10px;}
 .results__list {list-style-type: none;}
 .results__list li {display: flex;align-items: center;gap: 12px;padding: 10px 12px;color: var(--white-color);border-radius: 6px;}
 .results__list li + li {margin-top: 4px;}
