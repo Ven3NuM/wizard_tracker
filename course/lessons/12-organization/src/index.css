@@ -1,0 +1,533 @@
+/* Fonts are bundled so the app works offline, Latin and Greek subsets only */
+@import '@fontsource/fira-sans-extra-condensed/latin-600.css';
+@import '@fontsource/fira-sans-extra-condensed/greek-600.css';
+@import '@fontsource/ubuntu/latin-400.css';
+@import '@fontsource/ubuntu/greek-400.css';
+
+/* Class names follow BEM: block, block__element, block--modifier */
+
+:root {
+  --color-accent: hsl(79 59% 50%);
+  --color-accent-soft: hsl(79 59% 50% / 0.8);
+  --color-bg: hsl(214 17% 25%);
+  --color-text: hsl(45 60% 96%);
+  --color-error: hsl(358 73% 58%);
+  --color-surface: hsl(0 0% 100% / 0.05);
+  --color-line: hsl(0 0% 100% / 0.08);
+
+  --font-heading: 'Fira Sans Extra Condensed', sans-serif;
+  --font-text: 'Ubuntu', sans-serif;
+
+  --radius: 6px;
+}
+
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-text);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+fieldset {
+  border: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Layout */
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+.app__title {
+  margin: 16px 0 24px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 2.75rem;
+  letter-spacing: 0.02em;
+  color: var(--color-accent);
+}
+
+@media (min-width: 600px) {
+  .app {
+    padding-top: 50px;
+  }
+
+  .app__title {
+    margin: 32px 0 48px;
+  }
+}
+
+/* Shared pieces */
+
+.label {
+  display: block;
+  color: var(--color-accent-soft);
+}
+
+.label--center {
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin-top: 5px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem; /* 16px keeps iOS from zooming in on focus */
+  color: var(--color-bg);
+  background: var(--color-text);
+}
+
+.hint {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-accent-soft);
+}
+
+.hint--center {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.error {
+  margin: 10px 0;
+  text-align: center;
+  color: var(--color-error);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.actions--center {
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.button {
+  padding: 5px 15px;
+  border: 3px solid var(--color-accent);
+  border-radius: var(--radius);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  color: var(--color-bg);
+  background: var(--color-accent);
+  transition: background 200ms, color 200ms;
+}
+
+.button--secondary {
+  color: var(--color-accent);
+  background: transparent;
+}
+
+.button:not(:disabled):hover {
+  color: var(--color-accent);
+  background: transparent;
+}
+
+.button--secondary:not(:disabled):hover {
+  color: var(--color-bg);
+  background: var(--color-accent);
+}
+
+.button:disabled {
+  opacity: 0.4;
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-bg);
+  background: var(--color-accent);
+}
+
+.badge--outline {
+  color: var(--color-accent);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+/* Setup */
+
+.setup {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.setup__group {
+  margin-bottom: 20px;
+}
+
+.setup__names {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.setup__dealer {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.setup__dealer .input {
+  flex: 1;
+  margin-top: 0;
+}
+
+.setup__dealer .button {
+  font-size: 1rem;
+  border-width: 2px;
+}
+
+.segmented {
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.segmented__option {
+  flex: 1;
+  padding: 12px;
+  color: var(--color-bg);
+  background: var(--color-text);
+}
+
+.segmented__option + .segmented__option {
+  border-left: 1px solid var(--color-bg);
+}
+
+.segmented__option:hover {
+  color: var(--color-accent);
+}
+
+.segmented__option[aria-pressed='true'] {
+  color: var(--color-bg);
+  background: var(--color-accent);
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--color-accent);
+}
+
+/* Game */
+
+.round-info {
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--color-accent-soft);
+}
+
+.card {
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.card__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+}
+
+.card__meta {
+  font-family: var(--font-text);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.entry + .entry {
+  border-top: 1px solid var(--color-line);
+}
+
+.entry__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.entry__name .hint {
+  width: 100%;
+}
+
+.entry--edit {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+}
+
+.entry--head {
+  padding-bottom: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-accent-soft);
+}
+
+.entry--head span:not(:first-child) {
+  width: 132px;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stepper__button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--color-bg);
+  background: var(--color-text);
+  touch-action: manipulation; /* no double-tap zoom while tapping fast */
+}
+
+.stepper__button:disabled {
+  opacity: 0.3;
+}
+
+.stepper__value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+/* Scoreboard */
+
+.scoreboard {
+  overflow-x: auto;
+}
+
+.scoreboard__table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.scoreboard__table th,
+.scoreboard__table td {
+  min-width: 52px;
+  padding: 6px 4px;
+  text-align: center;
+}
+
+.scoreboard__table th {
+  position: sticky;
+  top: 0;
+  font-weight: normal;
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.scoreboard__table .scoreboard__round {
+  width: 32px;
+  min-width: 32px;
+  color: var(--color-accent-soft);
+}
+
+.scoreboard__name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: var(--color-accent-soft);
+}
+
+.scoreboard__total {
+  display: block;
+  font-size: 1.2rem;
+}
+
+.scoreboard__leader .scoreboard__total {
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+.scoreboard__row {
+  border-bottom: 1px solid var(--color-line);
+  cursor: pointer;
+}
+
+.scoreboard__row:hover,
+.scoreboard__row--current {
+  background: var(--color-surface);
+}
+
+.scoreboard__row--current {
+  cursor: default;
+}
+
+.scoreboard__edit {
+  width: 100%;
+  padding: 4px 0;
+}
+
+.scoreboard__detail {
+  display: block;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  color: var(--color-accent-soft);
+}
+
+.scoreboard__detail--hit {
+  color: var(--color-accent);
+}
+
+.scoreboard__detail--miss {
+  color: var(--color-error);
+}
+
+/* Edit round dialog, a bottom sheet */
+
+.sheet {
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  margin: auto auto 0;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.sheet::backdrop {
+  background: hsl(0 0% 0% / 0.6);
+}
+
+.sheet__body {
+  padding: 16px;
+}
+
+/* Final results */
+
+.results {
+  margin-bottom: 20px;
+}
+
+.results__title {
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+}
+
+.results__list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+}
+
+.results__list li + li {
+  margin-top: 4px;
+}
+
+.results__list .results__winner {
+  font-weight: bold;
+  color: var(--color-bg);
+  background: var(--color-accent);
+}
+
+.results__place {
+  width: 24px;
+  text-align: center;
+}
+
+.results__name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.results__total {
+  font-size: 1.2rem;
+}
