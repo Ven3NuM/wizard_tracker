@@ -15,7 +15,7 @@ A mobile-first web app for keeping score in the Wizard card game. The UI is in G
 
 ## Getting Started
 
-Requires Node.js 18 or newer.
+Requires Node.js 22.12 or newer (Vitest 5).
 
 ```bash
 npm install
