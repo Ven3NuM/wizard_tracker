@@ -1,54 +1,68 @@
 # Wizard Tracker
 
-A mobile-first web app for keeping score in the Wizard card game. The UI is in Greek.
+Εφαρμογή για το σκορ του παιχνιδιού καρτών Wizard, για κινητό, σε ελληνικά και αγγλικά. Και ένα μάθημα React
+που τη χτίζει από το μηδέν.
 
-## Features
+**Η εφαρμογή:** https://ven3num.github.io/wizard_tracker/
 
-- 3–6 players, all 60 cards are dealt: 3 players = 20 rounds, 4 = 15, 5 = 12, 6 = 10
-- Choose (or draw) the first dealer, the deal then rotates every round
-- Bids, then tricks, per round with validation (tricks must add up to the cards dealt)
-- Optional hook rule: bids may not add up to the cards dealt
-- Scoreboard with running totals, tap any finished round to fix it
-- Final ranking with ties, rematch with the same players
-- The game is saved in the browser, a refresh or closed tab resumes it
-- Installable PWA that works offline
+| Φάκελος | Τι είναι |
+| --- | --- |
+| [`app/`](app) | Η εφαρμογή που δημοσιεύεται |
+| [`course/`](course/README.md) | Μάθημα React σε 14 βήματα, που καταλήγει στην ίδια εφαρμογή |
 
-## Getting Started
+## Τι κάνει η εφαρμογή
 
-Requires Node.js 22.12 or newer (Vitest 5).
+- 3–6 παίκτες, μοιράζονται και τα 60 φύλλα: 3 παίκτες 20 γύροι, 4 → 15, 5 → 12, 6 → 10
+- Επιλογή ή κλήρωση πρώτου dealer, η μοιρασιά προχωράει μία θέση κάθε γύρο
+- Δηλώσεις και μετά μπάζες ανά γύρο, με έλεγχο (οι μπάζες αθροίζουν στα φύλλα)
+- Προαιρετικός κανόνας hook: οι δηλώσεις δεν μπορούν να είναι ίσες με τα φύλλα
+- Πίνακας σκορ με τρέχοντα σύνολα, διόρθωση οποιουδήποτε γύρου
+- Κατάταξη με ισοβαθμίες, ρεβάνς με τους ίδιους παίκτες
+- Το παιχνίδι μένει μετά από refresh ή κλείσιμο
+- Ελληνικά και αγγλικά, με επιλογή στην αρχική οθόνη
+- Εγκαθίσταται στο κινητό (PWA) και δουλεύει χωρίς ίντερνετ
+
+## Ανάπτυξη
+
+Χρειάζεται Node.js 22.12 ή νεότερο.
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
+npm run dev
 ```
 
-| Command                  | What it does                                      |
-| ------------------------ | ------------------------------------------------- |
-| `npm run dev`            | Dev server with hot reload                        |
-| `npm run build`          | Production build in `dist/`, with service worker  |
-| `npm run preview`        | Serve the production build locally                |
-| `npm test`               | Run the unit tests (Vitest)                       |
-| `npm run lint`           | ESLint                                            |
-| `npm run generate-icons` | Regenerate the PNG icons from `public/icon.svg`   |
+| Εντολή | Τι κάνει |
+| --- | --- |
+| `npm run dev` | Η εφαρμογή σε dev server με hot reload |
+| `npm run build` | Build για παραγωγή στο `app/dist/` |
+| `npm run preview` | Σερβίρει το build τοπικά |
+| `npm test` | Unit tests (Vitest) |
+| `npm run test:e2e` | E2E tests σε browser μεγέθους κινητού (Playwright) |
+| `npm run lint` | ESLint, για `app/` και `course/` |
+| `npm run lesson <n>` | Ανοίγει το μάθημα `n` |
 
-## Tech Stack
+Την πρώτη φορά, για τα e2e: `npx playwright install chromium`.
 
-- React 18.3, Vite 6
-- vite-plugin-pwa (Workbox) for offline support
-- Fontsource for bundled fonts with Greek glyphs
-- Vitest, ESLint
+Το repo είναι npm workspace: ένα `npm install` στη ρίζα καλύπτει και τα δύο. Το `app/dist/`
+παράγεται από το build, δεν μπαίνει στο git, και το δημοσιεύει το GitHub Actions
+(`.github/workflows/deploy.yml`) σε κάθε push στο `master`, αφού περάσουν lint και tests.
 
-## Project Structure
+## Δομή
 
 ```
-src/
-├── components/   # Settings, game screen, scoreboard, round editing
-├── hooks/        # useGame: reducer + localStorage persistence
-├── i18n/         # UI strings (Greek)
-├── utils/        # scoring.js: pure game rules
-├── styles/       # CSS
-├── App.jsx
-└── main.jsx
+app/
+├── src/
+│   ├── game/      κανόνες, reducer, αποθήκευση (χωρίς UI)
+│   ├── ui/        components
+│   ├── i18n/      κείμενα (ελληνικά, αγγλικά) και επιλογή γλώσσας
+│   └── App.jsx, main.jsx, index.css
+├── e2e/           Playwright tests και ρυθμίσεις
+├── public/        εικονίδια
+├── index.html
+└── vite.config.js (+ Vitest, PWA)
+course/
+├── lessons/NN-…/  README.md (θεωρία) + src/ (ο κώδικας εκείνου του βήματος)
+└── lesson.js      το «npm run lesson»
 ```
 
-See `CLAUDE.md` for detailed architecture notes.
+**Stack:** React 19, Vite 8, vite-plugin-pwa, Vitest, Playwright, ESLint 10.
