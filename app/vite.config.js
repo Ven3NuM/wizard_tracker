@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 const description = 'Καταγραφή σκορ για το παιχνίδι καρτών Wizard'
-const themeColor = '#353E4B' // --color-bg in index.css
+const themeColor = '#0E131B' // --color-bg in index.css
 
 export default defineConfig({
   // Served by GitHub Pages from https://ven3num.github.io/wizard_tracker/

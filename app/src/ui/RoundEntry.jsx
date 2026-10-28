@@ -1,9 +1,10 @@
 import { bidsError, forbiddenDealerBid, sum, tricksError } from '../game/rules'
 import { useTranslation } from '../i18n'
+import Avatar from './Avatar'
 import Stepper from './Stepper'
 
 // The current round: everyone bids, then everyone enters the tricks they took
-export default function RoundEntry({ players, round, current, hookRule, dispatch }) {
+export default function RoundEntry({ players, totals, round, current, hookRule, dispatch }) {
   const { errorMessage, t } = useTranslation()
   const isBids = current.phase === 'bids'
   const values = isBids ? current.bids : current.tricks
@@ -11,6 +12,16 @@ export default function RoundEntry({ players, round, current, hookRule, dispatch
   // Fewer tricks than cards only means they aren't all entered yet, that's not an error
   const remaining = !isBids && error ? round.cards - error.total : 0
   const forbidden = isBids && hookRule ? forbiddenDealerBid(current.bids, round) : null
+
+  // One line under each name: the player's role this round, else their total so far
+  const noteFor = (p) => {
+    const notes = []
+    if (p === round.dealer) notes.push(t.dealer)
+    if (isBids && p === round.firstBidder) notes.push(t.firstBidder)
+    if (!isBids) notes.push(t.bidHint(current.bids[p]))
+    if (p === round.dealer && forbidden !== null) notes.push(t.forbiddenHint(forbidden))
+    return notes.length > 0 ? notes.join(' · ') : t.totalHint(totals[p])
+  }
 
   return (
     <section className="card">
@@ -24,12 +35,10 @@ export default function RoundEntry({ players, round, current, hookRule, dispatch
       <ul className="entries">
         {players.map((name, p) => (
           <li key={p} className="entry">
+            <Avatar name={name} index={p} />
             <span className="entry__name">
               {name}
-              {p === round.dealer && <span className="badge">{t.dealer}</span>}
-              {isBids && p === round.firstBidder && <span className="badge badge--outline">{t.firstBidder}</span>}
-              {!isBids && <span className="hint">{t.bidHint(current.bids[p])}</span>}
-              {p === round.dealer && forbidden !== null && <span className="hint">{t.forbiddenHint(forbidden)}</span>}
+              <span className={p === round.dealer && forbidden !== null ? 'hint hint--warn' : 'hint'}>{noteFor(p)}</span>
             </span>
             <Stepper
               label={`${name}, ${isBids ? t.bid : t.tricks}`}
@@ -47,7 +56,7 @@ export default function RoundEntry({ players, round, current, hookRule, dispatch
         error && <p className="error">{errorMessage(error)}</p>
       )}
 
-      <div className="actions">
+      <div className="actions actions--fill">
         {!isBids && (
           <button type="button" className="button button--secondary" onClick={() => dispatch({ type: 'BACK_TO_BIDS' })}>
             {t.back}

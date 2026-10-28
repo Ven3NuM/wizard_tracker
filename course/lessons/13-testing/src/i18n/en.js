@@ -3,21 +3,24 @@ const cards = (n) => `${n} ${n === 1 ? 'card' : 'cards'}`
 const en = {
   appTitle: 'Wizard Tracker',
   languageName: 'English',
+  languageShort: 'EN',
 
   // Setup
   language: 'Language',
+  setupSubtitle: "Who's playing tonight?",
   playerCount: 'Number of players',
   playerName: (n) => `Player ${n}`,
-  playerPlaceholder: 'Player name',
   firstDealer: 'First dealer',
   drawDealer: 'Draw',
   hookRule: 'Hook rule',
   hookRuleHelp: "Bids can't add up to the number of cards, the dealer bids last.",
   startGame: 'Start',
+  roundsCount: (n) => `${n} rounds`,
 
   // Game
-  roundInfo: (round, total, cardCount, dealer) =>
-    `Round ${round} / ${total} · ${cards(cardCount)} · Dealer: ${dealer}`,
+  roundOf: (round, total) => `Round ${round} of ${total}`,
+  cardsWord: (n) => (n === 1 ? 'card' : 'cards'),
+  firstBidderIs: (name) => `${name} bids first`,
   newGame: 'New game',
   confirmNewGame: 'Start a new game? The current score will be lost.',
   rematch: 'Rematch',
@@ -25,13 +28,14 @@ const en = {
   // Round entry
   bids: 'Bids',
   tricks: 'Tricks',
-  dealer: 'Dealer',
+  dealer: 'Deals',
   firstBidder: 'Bids first',
   bidHint: (n) => `bid ${n}`,
+  totalHint: (n) => `Total ${n}`,
   forbiddenHint: (n) => `can't bid ${n}`,
   tricksRemaining: (n) => (n === 1 ? '1 trick left' : `${n} tricks left`),
   back: 'Back',
-  confirmBids: 'Confirm',
+  confirmBids: 'Confirm bids',
   finishRound: 'End round',
 
   // Edit round

@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { PLAYER_COUNTS, replaceAt, validatePlayers } from '../game/rules'
-import { LANGUAGES, useTranslation } from '../i18n'
+import { PLAYER_COUNTS, replaceAt, totalRounds, validatePlayers } from '../game/rules'
+import { useTranslation } from '../i18n'
+import Avatar from './Avatar'
 
 // Keeps names short enough for the scoreboard columns
 const MAX_NAME_LENGTH = 20
 
 export default function Setup({ initialSetup, onStart }) {
-  const { language, setLanguage, errorMessage, t } = useTranslation()
+  const { errorMessage, t } = useTranslation()
   const [names, setNames] = useState(initialSetup?.players ?? ['', '', ''])
   const [firstDealer, setFirstDealer] = useState(initialSetup?.firstDealer ?? 0)
   const [hookRule, setHookRule] = useState(initialSetup?.hookRule ?? false)
@@ -37,26 +38,11 @@ export default function Setup({ initialSetup, onStart }) {
 
   return (
     <form className="setup" onSubmit={handleSubmit} noValidate>
-      <fieldset className="setup__group">
-        <legend className="label label--center">{t.language}</legend>
-        <div className="segmented">
-          {Object.entries(LANGUAGES).map(([code, strings]) => (
-            <button
-              key={code}
-              type="button"
-              lang={code}
-              className="segmented__option"
-              aria-pressed={language === code}
-              onClick={() => setLanguage(code)}
-            >
-              {strings.languageName}
-            </button>
-          ))}
-        </div>
-      </fieldset>
+      <h2 className="setup__title">{t.newGame}</h2>
+      <p className="setup__subtitle">{t.setupSubtitle}</p>
 
       <fieldset className="setup__group">
-        <legend className="label label--center">{t.playerCount}</legend>
+        <legend className="label label--caps">{t.playerCount}</legend>
         <div className="segmented">
           {PLAYER_COUNTS.map((count) => (
             <button
@@ -74,23 +60,25 @@ export default function Setup({ initialSetup, onStart }) {
 
       <ol className="setup__names">
         {names.map((name, i) => (
-          <li key={i}>
+          <li key={i} className="setup__player">
+            <Avatar name={name} index={i} />
             <label className="label">
-              {t.playerName(i + 1)}
+              <span className="visually-hidden">{t.playerName(i + 1)}</span>
               <input
                 className="input"
                 value={name}
-                placeholder={t.playerPlaceholder}
+                placeholder={t.playerName(i + 1)}
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(event) => changeName(i, event.target.value)}
               />
             </label>
+            {i === firstDealer && <span className="badge">{t.dealer}</span>}
           </li>
         ))}
       </ol>
 
       <div className="setup__group">
-        <label className="label" htmlFor="first-dealer">
+        <label className="label label--caps" htmlFor="first-dealer">
           {t.firstDealer}
         </label>
         <div className="setup__dealer">
@@ -117,7 +105,7 @@ export default function Setup({ initialSetup, onStart }) {
       </div>
 
       <label className="setup__group checkbox">
-        <input type="checkbox" checked={hookRule} onChange={(event) => setHookRule(event.target.checked)} />
+        <input type="checkbox" role="switch" checked={hookRule} onChange={(event) => setHookRule(event.target.checked)} />
         <span>
           {t.hookRule}
           <small className="hint">{t.hookRuleHelp}</small>
@@ -127,8 +115,8 @@ export default function Setup({ initialSetup, onStart }) {
       {error && <p className="error">{errorMessage(error)}</p>}
 
       <div className="actions">
-        <button type="submit" className="button">
-          {t.startGame}
+        <button type="submit" className="button button--block">
+          {t.startGame} · {t.roundsCount(totalRounds(names.length))}
         </button>
       </div>
     </form>

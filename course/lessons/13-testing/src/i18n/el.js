@@ -3,21 +3,24 @@ const cards = (n) => `${n} ${n === 1 ? 'φύλλο' : 'φύλλα'}`
 const el = {
   appTitle: 'Wizard Tracker',
   languageName: 'Ελληνικά',
+  languageShort: 'ΕΛ',
 
   // Setup
   language: 'Γλώσσα',
+  setupSubtitle: 'Ποιοι παίζουν απόψε;',
   playerCount: 'Αριθμός παικτών',
   playerName: (n) => `Παίκτης ${n}`,
-  playerPlaceholder: 'Όνομα παίκτη',
   firstDealer: 'Πρώτος dealer',
   drawDealer: 'Κλήρωση',
   hookRule: 'Κανόνας hook',
   hookRuleHelp: 'Οι δηλώσεις δεν μπορούν να είναι ίσες με τα φύλλα, ο dealer δηλώνει τελευταίος.',
   startGame: 'Έναρξη',
+  roundsCount: (n) => `${n} γύροι`,
 
   // Game
-  roundInfo: (round, total, cardCount, dealer) =>
-    `Γύρος ${round} / ${total} · ${cards(cardCount)} · Dealer: ${dealer}`,
+  roundOf: (round, total) => `Γύρος ${round} από ${total}`,
+  cardsWord: (n) => (n === 1 ? 'φύλλο' : 'φύλλα'),
+  firstBidderIs: (name) => `Δηλώνει πρώτος: ${name}`,
   newGame: 'Νέο παιχνίδι',
   confirmNewGame: 'Νέο παιχνίδι; Το τρέχον σκορ θα χαθεί.',
   rematch: 'Ρεβάνς',
@@ -25,13 +28,14 @@ const el = {
   // Round entry
   bids: 'Δηλώσεις',
   tricks: 'Μπάζες',
-  dealer: 'Dealer',
+  dealer: 'Μοιράζει',
   firstBidder: 'Δηλώνει πρώτος',
   bidHint: (n) => `δήλωσε ${n}`,
+  totalHint: (n) => `Σύνολο ${n}`,
   forbiddenHint: (n) => `δεν μπορεί να δηλώσει ${n}`,
   tricksRemaining: (n) => (n === 1 ? 'Απομένει 1 μπάζα' : `Απομένουν ${n} μπάζες`),
   back: 'Πίσω',
-  confirmBids: 'Επιβεβαίωση',
+  confirmBids: 'Επιβεβαίωση δηλώσεων',
   finishRound: 'Τέλος γύρου',
 
   // Edit round

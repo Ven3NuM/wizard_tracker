@@ -11,6 +11,12 @@ export async function startGame(page, players, { hookRule = false } = {}) {
   await expect(page.getByText('Δηλώσεις')).toBeVisible()
 }
 
+// Checks the round header ("Γύρος 2 από 20") and who deals
+export async function expectRound(page, label, dealer) {
+  await expect(page.getByRole('heading', { name: label })).toBeVisible()
+  await expect(page.locator('.round__dealer')).toHaveText(dealer)
+}
+
 // Presses + on a player's stepper `times` times
 export async function step(page, name, column, times) {
   const plus = page.getByRole('button', { name: `${name}, ${column}: αύξηση` })

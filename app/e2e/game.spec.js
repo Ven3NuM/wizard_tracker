@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { playRound, startGame, step } from './helpers'
+import { expectRound, playRound, startGame, step } from './helpers'
 
 const players = ['Άννα', 'Βασίλης', 'Γιώργος']
 
@@ -20,14 +20,14 @@ test('starts with the chosen first dealer', async ({ page }) => {
   for (const [i, name] of players.entries()) await page.getByLabel(`Παίκτης ${i + 1}`, { exact: true }).fill(name)
   await page.getByLabel('Πρώτος dealer').selectOption({ label: 'Γιώργος' })
   await page.getByRole('button', { name: 'Έναρξη' }).click()
-  await expect(page.getByText('Γύρος 1 / 20 · 1 φύλλο · Dealer: Γιώργος')).toBeVisible()
+  await expectRound(page, 'Γύρος 1 από 20', 'Γιώργος')
 })
 
 test('scores a round and moves to the next', async ({ page }) => {
   await startGame(page, players)
   await playRound(page, { Άννα: 1 }, { Άννα: 1 })
 
-  await expect(page.getByText('Γύρος 2 / 20 · 2 φύλλα · Dealer: Βασίλης')).toBeVisible()
+  await expectRound(page, 'Γύρος 2 από 20', 'Βασίλης')
   const totals = page.locator('.scoreboard__total')
   await expect(totals).toHaveText(['30', '20', '20'])
 })
@@ -55,7 +55,7 @@ test('resumes the game after a reload', async ({ page }) => {
   await startGame(page, players)
   await playRound(page, {}, { Βασίλης: 1 })
   await page.reload()
-  await expect(page.getByText(/^Γύρος 2 \/ 20/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Γύρος 2 από 20' })).toBeVisible()
   await expect(page.locator('.scoreboard__total')).toHaveText(['20', '-10', '20'])
 })
 
@@ -90,7 +90,7 @@ test('plays a full game to the final ranking and rematch', async ({ page }) => {
   await expect(rows.last()).toContainText('-550')
 
   await page.getByRole('button', { name: 'Ρεβάνς' }).click()
-  await expect(page.getByText('Γύρος 1 / 10 · 1 φύλλο · Dealer: B')).toBeVisible()
+  await expectRound(page, 'Γύρος 1 από 10', 'B')
 })
 
 test('switches to English and remembers the choice', async ({ page }) => {
@@ -104,5 +104,5 @@ test('switches to English and remembers the choice', async ({ page }) => {
     await page.getByLabel(`Player ${i + 1}`, { exact: true }).fill(name)
   }
   await page.getByRole('button', { name: 'Start' }).click()
-  await expect(page.getByText('Round 1 / 20 · 1 card · Dealer: Anna')).toBeVisible()
+  await expectRound(page, 'Round 1 of 20', 'Anna')
 })

@@ -9,6 +9,7 @@ export default function Scoreboard({ players, table, current, onEditRound }) {
   const totals = totalsOf(table, players.length)
   const best = Math.max(...totals)
   const hasScores = table.length > 0
+  const lastRound = table.at(-1)
 
   return (
     <section className="scoreboard">
@@ -23,9 +24,17 @@ export default function Scoreboard({ players, table, current, onEditRound }) {
                 key={p}
                 scope="col"
                 className={hasScores && totals[p] === best ? 'scoreboard__leader' : undefined}
+                style={{ '--avatar': `var(--player-${p + 1})` }}
               >
-                <span className="scoreboard__name">{name}</span>
+                <span className="scoreboard__name">
+                  <span>{name}</span>
+                </span>
                 <span className="scoreboard__total">{totals[p]}</span>
+                {lastRound && (
+                  <span className={`scoreboard__delta scoreboard__delta--${lastRound[p].points > 0 ? 'hit' : 'miss'}`}>
+                    {formatPoints(lastRound[p].points)}
+                  </span>
+                )}
               </th>
             ))}
           </tr>

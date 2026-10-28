@@ -34,7 +34,7 @@ src/
 │   ├── rules.js     pure rules: roundInfo, roundScore, validation, scoreTable, ranking
 │   ├── reducer.js   state shape (documented at the top) and actions
 │   └── useGame.js   useReducer + versioned localStorage persistence
-├── ui/              Setup, GameScreen, RoundEntry, Scoreboard, EditRoundDialog, FinalResults, Stepper
+├── ui/              Setup, GameScreen, RoundHeader, RoundEntry, Scoreboard, EditRoundDialog, FinalResults, Stepper, Avatar, LanguageSwitch
 ├── i18n/            el.js, en.js strings; index.js (LANGUAGES, LanguageContext, useTranslation); LanguageProvider.jsx
 ├── App.jsx, main.jsx, index.css
 ```
@@ -46,8 +46,8 @@ Rules of the codebase:
 - Validation returns `null` or `{ type, ...data }`; `errorMessage()` maps it via `t.errors[type]`. No text in `game/`.
 - Actions: `START_GAME`, `REMATCH` (first dealer +1), `NEW_GAME` (keeps `lastSetup`), `SET_VALUE` (bid or trick depending on phase), `CONFIRM_BIDS`, `BACK_TO_BIDS`, `FINISH_ROUND`, `UPDATE_ROUND`. The UI validates; the reducer trusts input.
 - Changing the stored state shape → bump `VERSION` in `useGame.js` (old saves are then ignored).
-- All user-facing text in `i18n/el.js` and `i18n/en.js` (same keys, enforced by `i18n.test.js`). Components get `{ t, errorMessage, language, setLanguage }` from `useTranslation()`; `LanguageProvider` (wraps `App` in `main.jsx`) holds the language, defaults to the device language, saves it under `wizard-tracker-language` and sets `<html lang>`. The switch is on the setup screen. E2E runs with locale `el-GR`.
-- CSS: BEM class names, tokens on `:root`, state styled through ARIA (`[aria-pressed='true']`). Fonts via Fontsource (Latin + Greek subsets): Fira Sans Extra Condensed 600 for headings/buttons, Ubuntu 400 for text. Keep `:focus-visible` outlines.
+- All user-facing text in `i18n/el.js` and `i18n/en.js` (same keys, enforced by `i18n.test.js`). Components get `{ t, errorMessage, language, setLanguage }` from `useTranslation()`; `LanguageProvider` (wraps `App` in `main.jsx`) holds the language, defaults to the device language, saves it under `wizard-tracker-language` and sets `<html lang>`. The ΕΛ/EN switch (`LanguageSwitch`) sits in the header, on the setup screen only. E2E runs with locale `el-GR`.
+- CSS: BEM class names, tokens on `:root`, state styled through ARIA (`[aria-pressed='true']`). Dark "Night Table" look: surfaces on `--color-bg`, lime `--color-accent` only for actions and the leader, one `--player-N` color per seat (`Avatar`, scoreboard dots). Fonts via Fontsource (Latin + Greek subsets): Commissioner 400/600/800. Lessons 01-11 import this same `index.css`, so keep their class names styled. Keep `:focus-visible` outlines.
 - Native elements over custom code: `<form onSubmit>`, `<dialog>` + `showModal()` for the edit sheet, labels wrapping inputs. Steppers have `aria-label`s ("Άννα, Δήλωση: αύξηση") that e2e tests rely on.
 - PWA icons in `app/public/` were generated from `icon.svg` (`npx @vite-pwa/assets-generator`, minimal-2023 preset, background `#353E4B`); not a dependency.
 

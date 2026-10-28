@@ -25,11 +25,14 @@ src/
 ├── ui/                τα components
 │   ├── Setup.jsx
 │   ├── GameScreen.jsx
+│   ├── RoundHeader.jsx  γύρος, φύλλα, dealer
 │   ├── RoundEntry.jsx
 │   ├── Scoreboard.jsx
 │   ├── EditRoundDialog.jsx
 │   ├── FinalResults.jsx
-│   └── Stepper.jsx
+│   ├── Stepper.jsx
+│   ├── LanguageSwitch.jsx  ΕΛ / EN στην κεφαλίδα
+│   └── Avatar.jsx     το αρχικό του παίκτη στο χρώμα της θέσης του
 ├── i18n/              τα κείμενα της οθόνης
 │   ├── el.js, en.js   ελληνικά, αγγλικά
 │   ├── index.js       οι γλώσσες, το Context, το useTranslation
@@ -125,7 +128,7 @@ export default function Stepper({ label, value, max, onChange }) {
 }
 ```
 
-Όταν πατηθεί «English», το `setLanguage('en')` αλλάζει το state του provider, και η React ξανασχεδιάζει
+Όταν πατηθεί «EN», το `setLanguage('en')` αλλάζει το state του provider, και η React ξανασχεδιάζει
 **κάθε component που διαβάζει το context**, με τα αγγλικά κείμενα. Κανένα prop δεν πέρασε από πουθενά.
 
 Ο provider κάνει και δύο μικρά πράγματα με ένα effect (μάθημα 10): θυμάται την επιλογή στο

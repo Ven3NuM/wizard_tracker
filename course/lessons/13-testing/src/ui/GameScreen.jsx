@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { roundInfo, scoreTable, totalRounds } from '../game/rules'
+import { roundInfo, scoreTable, totalsOf } from '../game/rules'
 import { useTranslation } from '../i18n'
+import RoundHeader from './RoundHeader'
 import RoundEntry from './RoundEntry'
 import Scoreboard from './Scoreboard'
 import EditRoundDialog from './EditRoundDialog'
@@ -11,6 +12,7 @@ export default function GameScreen({ game, dispatch }) {
   const { players, rounds, current, hookRule, firstDealer } = game
   const [editing, setEditing] = useState(null) // index of the round being fixed
   const table = scoreTable(rounds)
+  const totals = totalsOf(table, players.length)
   const round = roundInfo(rounds.length, players.length, firstDealer)
 
   const handleNewGame = () => {
@@ -27,10 +29,15 @@ export default function GameScreen({ game, dispatch }) {
     <>
       {current ? (
         <>
-          <p className="round-info">
-            {t.roundInfo(round.index + 1, totalRounds(players.length), round.cards, players[round.dealer])}
-          </p>
-          <RoundEntry players={players} round={round} current={current} hookRule={hookRule} dispatch={dispatch} />
+          <RoundHeader players={players} round={round} />
+          <RoundEntry
+            players={players}
+            totals={totals}
+            round={round}
+            current={current}
+            hookRule={hookRule}
+            dispatch={dispatch}
+          />
         </>
       ) : (
         <FinalResults players={players} table={table} />
@@ -39,14 +46,14 @@ export default function GameScreen({ game, dispatch }) {
       <Scoreboard players={players} table={table} current={current} onEditRound={setEditing} />
 
       <div className="actions actions--center">
-        <button type="button" className="button button--secondary" onClick={handleNewGame}>
-          {t.newGame}
-        </button>
         {!current && (
           <button type="button" className="button" onClick={() => dispatch({ type: 'REMATCH' })}>
             {t.rematch}
           </button>
         )}
+        <button type="button" className="button button--secondary" onClick={handleNewGame}>
+          {t.newGame}
+        </button>
       </div>
 
       {editing !== null && (
