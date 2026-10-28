@@ -49,7 +49,7 @@ Rules of the codebase:
 - All user-facing text in `i18n/el.js` and `i18n/en.js` (same keys, enforced by `i18n.test.js`). Components get `{ t, errorMessage, language, setLanguage }` from `useTranslation()`; `LanguageProvider` (wraps `App` in `main.jsx`) holds the language, defaults to the device language, saves it under `wizard-tracker-language` and sets `<html lang>`. The ΕΛ/EN switch (`LanguageSwitch`) sits in the header, on the setup screen only. E2E runs with locale `el-GR`.
 - CSS: BEM class names, tokens on `:root`, state styled through ARIA (`[aria-pressed='true']`). Dark "Night Table" look: surfaces on `--color-bg`, lime `--color-accent` only for actions and the leader, one `--player-N` color per seat (`Avatar`, scoreboard dots). Fonts via Fontsource (Latin + Greek subsets): Commissioner 400/600/800. Lessons 01-11 import this same `index.css`, so keep their class names styled. Keep `:focus-visible` outlines.
 - Native elements over custom code: `<form onSubmit>`, `<dialog>` + `showModal()` for the edit sheet, labels wrapping inputs. Steppers have `aria-label`s ("Άννα, Δήλωση: αύξηση") that e2e tests rely on.
-- PWA icons in `app/public/` were generated from `icon.svg` (`npx @vite-pwa/assets-generator`, minimal-2023 preset, background `#353E4B`); not a dependency.
+- PWA icons in `app/public/` were generated from `icon.svg` (`npx @vite-pwa/assets-generator`, minimal-2023 preset, background `#0E131B` for maskable and Apple icons; set it with a temporary `pwa-assets.config.js`); not a dependency.
 
 ## course/ conventions
 
