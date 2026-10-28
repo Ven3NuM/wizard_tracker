@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { PLAYER_COUNTS, replaceAt, totalRounds, validatePlayers } from '../game/rules'
 import { useTranslation } from '../i18n'
 import Avatar from './Avatar'
+import { ArrowIcon, DiceIcon } from './icons'
 
 // Keeps names short enough for the scoreboard columns
 const MAX_NAME_LENGTH = 20
@@ -61,7 +62,16 @@ export default function Setup({ initialSetup, onStart }) {
       <ol className="setup__names">
         {names.map((name, i) => (
           <li key={i} className="setup__player">
-            <Avatar name={name} index={i} />
+            {/* Tapping a player's avatar makes them the first dealer */}
+            <button
+              type="button"
+              className="setup__pick"
+              aria-label={t.chooseDealer(name.trim() || t.playerName(i + 1))}
+              aria-pressed={i === firstDealer}
+              onClick={() => setFirstDealer(i)}
+            >
+              <Avatar name={name} index={i} />
+            </button>
             <label className="label">
               <span className="visually-hidden">{t.playerName(i + 1)}</span>
               <input
@@ -77,32 +87,14 @@ export default function Setup({ initialSetup, onStart }) {
         ))}
       </ol>
 
-      <div className="setup__group">
-        <label className="label label--caps" htmlFor="first-dealer">
-          {t.firstDealer}
-        </label>
-        <div className="setup__dealer">
-          <select
-            id="first-dealer"
-            className="input"
-            value={firstDealer}
-            onChange={(event) => setFirstDealer(Number(event.target.value))}
-          >
-            {names.map((name, i) => (
-              <option key={i} value={i}>
-                {name.trim() || t.playerName(i + 1)}
-              </option>
-            ))}
-          </select>
-          <button
-            type="button"
-            className="button button--secondary"
-            onClick={() => setFirstDealer(Math.floor(Math.random() * names.length))}
-          >
-            {t.drawDealer}
-          </button>
-        </div>
-      </div>
+      <button
+        type="button"
+        className="button button--secondary button--block setup__group"
+        onClick={() => setFirstDealer(Math.floor(Math.random() * names.length))}
+      >
+        <DiceIcon />
+        {t.drawDealer}
+      </button>
 
       <label className="setup__group checkbox">
         <input type="checkbox" role="switch" checked={hookRule} onChange={(event) => setHookRule(event.target.checked)} />
@@ -117,6 +109,7 @@ export default function Setup({ initialSetup, onStart }) {
       <div className="actions">
         <button type="submit" className="button button--block">
           {t.startGame} · {t.roundsCount(totalRounds(names.length))}
+          <ArrowIcon />
         </button>
       </div>
     </form>

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { expectRound, playRound, startGame, step } from './helpers'
+import { expectRound, expectTotals, playRound, startGame, step } from './helpers'
 
 const players = ['Άννα', 'Βασίλης', 'Γιώργος']
 
@@ -18,7 +18,7 @@ test('asks for unique names before starting', async ({ page }) => {
 test('starts with the chosen first dealer', async ({ page }) => {
   await page.goto('./')
   for (const [i, name] of players.entries()) await page.getByLabel(`Παίκτης ${i + 1}`, { exact: true }).fill(name)
-  await page.getByLabel('Πρώτος dealer').selectOption({ label: 'Γιώργος' })
+  await page.getByRole('button', { name: 'Γιώργος μοιράζει πρώτος' }).click()
   await page.getByRole('button', { name: 'Έναρξη' }).click()
   await expectRound(page, 'Γύρος 1 από 20', 'Γιώργος')
 })
@@ -28,8 +28,7 @@ test('scores a round and moves to the next', async ({ page }) => {
   await playRound(page, { Άννα: 1 }, { Άννα: 1 })
 
   await expectRound(page, 'Γύρος 2 από 20', 'Βασίλης')
-  const totals = page.locator('.scoreboard__total')
-  await expect(totals).toHaveText(['30', '20', '20'])
+  await expectTotals(page, { Άννα: 30, Βασίλης: 20, Γιώργος: 20 })
 })
 
 test('tricks must add up to the cards dealt', async ({ page }) => {
@@ -56,7 +55,7 @@ test('resumes the game after a reload', async ({ page }) => {
   await playRound(page, {}, { Βασίλης: 1 })
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Γύρος 2 από 20' })).toBeVisible()
-  await expect(page.locator('.scoreboard__total')).toHaveText(['20', '-10', '20'])
+  await expectTotals(page, { Άννα: 20, Βασίλης: -10, Γιώργος: 20 })
 })
 
 test('edits a finished round and confirms before discarding', async ({ page }) => {
@@ -74,7 +73,7 @@ test('edits a finished round and confirms before discarding', async ({ page }) =
 
   await dialog.getByRole('button', { name: 'Αποθήκευση' }).click()
   await expect(dialog).toBeHidden()
-  await expect(page.locator('.scoreboard__total')).toHaveText(['30', '20', '20'])
+  await expectTotals(page, { Άννα: 30, Βασίλης: 20, Γιώργος: 20 })
 })
 
 test('plays a full game to the final ranking and rematch', async ({ page }) => {
@@ -83,8 +82,8 @@ test('plays a full game to the final ranking and rematch', async ({ page }) => {
   // Everyone bids 0 and A takes every trick: A misses, the rest score 20 per round
   for (let r = 0; r < 10; r++) await playRound(page, {}, { A: r + 1 })
 
-  await expect(page.getByText('Τέλος παιχνιδιού')).toBeVisible()
-  const rows = page.locator('.results__list li')
+  await expect(page.getByRole('heading', { name: 'Πρώτη θέση: B & C & D & E & F' })).toBeVisible()
+  const rows = page.locator('.results li')
   await expect(rows.first()).toContainText('200')
   await expect(rows.last()).toContainText('A')
   await expect(rows.last()).toContainText('-550')
@@ -96,7 +95,7 @@ test('plays a full game to the final ranking and rematch', async ({ page }) => {
 test('switches to English and remembers the choice', async ({ page }) => {
   await page.goto('./')
   await page.getByRole('button', { name: 'English' }).click()
-  await expect(page.getByText('Number of players')).toBeVisible()
+  await expect(page.getByText("Who's playing tonight?")).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
   await page.reload()

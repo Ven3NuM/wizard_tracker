@@ -8,19 +8,20 @@ const el = {
   // Setup
   language: 'Γλώσσα',
   setupSubtitle: 'Ποιοι παίζουν απόψε;',
-  playerCount: 'Αριθμός παικτών',
+  playerCount: 'Παίκτες',
   playerName: (n) => `Παίκτης ${n}`,
-  firstDealer: 'Πρώτος dealer',
-  drawDealer: 'Κλήρωση',
+  chooseDealer: (name) => `${name} μοιράζει πρώτος`,
+  drawDealer: 'Κλήρωση dealer',
   hookRule: 'Κανόνας hook',
-  hookRuleHelp: 'Οι δηλώσεις δεν μπορούν να είναι ίσες με τα φύλλα, ο dealer δηλώνει τελευταίος.',
+  hookRuleHelp: 'Οι δηλώσεις δεν βγαίνουν ίσες με τα φύλλα',
   startGame: 'Έναρξη',
   roundsCount: (n) => `${n} γύροι`,
 
   // Game
   roundOf: (round, total) => `Γύρος ${round} από ${total}`,
   cardsWord: (n) => (n === 1 ? 'φύλλο' : 'φύλλα'),
-  firstBidderIs: (name) => `Δηλώνει πρώτος: ${name}`,
+  firstBidderIs: (name) => `Ξεκινά: ${name}`,
+  menu: 'Μενού',
   newGame: 'Νέο παιχνίδι',
   confirmNewGame: 'Νέο παιχνίδι; Το τρέχον σκορ θα χαθεί.',
   rematch: 'Ρεβάνς',
@@ -28,11 +29,12 @@ const el = {
   // Round entry
   bids: 'Δηλώσεις',
   tricks: 'Μπάζες',
+  tricksCount: (taken, cards) => `${taken} / ${cards} μπάζες`,
   dealer: 'Μοιράζει',
   firstBidder: 'Δηλώνει πρώτος',
   bidHint: (n) => `δήλωσε ${n}`,
   totalHint: (n) => `Σύνολο ${n}`,
-  forbiddenHint: (n) => `δεν μπορεί να δηλώσει ${n}`,
+  forbiddenHint: (n) => `δεν μπορεί ${n}`,
   tricksRemaining: (n) => (n === 1 ? 'Απομένει 1 μπάζα' : `Απομένουν ${n} μπάζες`),
   back: 'Πίσω',
   confirmBids: 'Επιβεβαίωση δηλώσεων',
@@ -51,12 +53,16 @@ const el = {
   increase: (label) => `${label}: αύξηση`,
 
   // Scoreboard
+  standings: 'Κατάταξη',
+  afterRounds: (n) => (n === 1 ? 'μετά από 1 γύρο' : `μετά από ${n} γύρους`),
   roundColumn: 'Γύρος',
-  bidShort: (n) => `δήλ. ${n}`,
-  editHint: 'Πατήστε σε έναν γύρο για διόρθωση.',
+  editHint: 'Γύροι · πάτα για διόρθωση',
 
   // Final results
-  gameOver: 'Τέλος παιχνιδιού',
+  gameOver: (rounds) => `${rounds} γύροι · τέλος`,
+  winner: (names) => `Πρώτη θέση: ${names.join(' & ')}`,
+  mostAccurate: 'Πιο εύστοχος',
+  biggestRound: 'Μεγαλύτερος γύρος',
 
   // Validation errors, keyed by the `type` the rules return
   errors: {

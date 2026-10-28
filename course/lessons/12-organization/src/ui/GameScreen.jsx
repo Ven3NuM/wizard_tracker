@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { roundInfo, scoreTable, totalsOf } from '../game/rules'
 import { useTranslation } from '../i18n'
 import RoundHeader from './RoundHeader'
+import GameMenu from './GameMenu'
 import RoundEntry from './RoundEntry'
+import Standings from './Standings'
 import Scoreboard from './Scoreboard'
 import EditRoundDialog from './EditRoundDialog'
 import FinalResults from './FinalResults'
@@ -29,7 +31,9 @@ export default function GameScreen({ game, dispatch }) {
     <>
       {current ? (
         <>
-          <RoundHeader players={players} round={round} />
+          <RoundHeader players={players} round={round}>
+            <GameMenu onNewGame={handleNewGame} />
+          </RoundHeader>
           <RoundEntry
             players={players}
             totals={totals}
@@ -38,23 +42,18 @@ export default function GameScreen({ game, dispatch }) {
             hookRule={hookRule}
             dispatch={dispatch}
           />
+          {table.length > 0 && <Standings players={players} table={table} />}
         </>
       ) : (
-        <FinalResults players={players} table={table} />
+        <FinalResults
+          players={players}
+          table={table}
+          onRematch={() => dispatch({ type: 'REMATCH' })}
+          onNewGame={handleNewGame}
+        />
       )}
 
-      <Scoreboard players={players} table={table} current={current} onEditRound={setEditing} />
-
-      <div className="actions actions--center">
-        {!current && (
-          <button type="button" className="button" onClick={() => dispatch({ type: 'REMATCH' })}>
-            {t.rematch}
-          </button>
-        )}
-        <button type="button" className="button button--secondary" onClick={handleNewGame}>
-          {t.newGame}
-        </button>
-      </div>
+      {table.length > 0 && <Scoreboard players={players} table={table} onEditRound={setEditing} />}
 
       {editing !== null && (
         <EditRoundDialog

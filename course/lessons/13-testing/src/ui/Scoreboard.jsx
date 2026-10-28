@@ -1,18 +1,16 @@
-import { totalsOf } from '../game/rules'
 import { useTranslation } from '../i18n'
+import { formatPoints } from './format'
 
-const formatPoints = (points) => (points > 0 ? `+${points}` : `${points}`)
+// Columns are narrow, so the header shows the start of each name
+const SHORT_NAME = 3
 
-// Rounds x players with running totals; tapping a finished round opens it for editing
-export default function Scoreboard({ players, table, current, onEditRound }) {
+// Rounds x players with running totals; tapping a round opens it for editing
+export default function Scoreboard({ players, table, onEditRound }) {
   const { t } = useTranslation()
-  const totals = totalsOf(table, players.length)
-  const best = Math.max(...totals)
-  const hasScores = table.length > 0
-  const lastRound = table.at(-1)
 
   return (
     <section className="scoreboard">
+      <h2 className="label label--caps">{t.editHint}</h2>
       <table className="scoreboard__table">
         <thead>
           <tr>
@@ -20,21 +18,9 @@ export default function Scoreboard({ players, table, current, onEditRound }) {
               #
             </th>
             {players.map((name, p) => (
-              <th
-                key={p}
-                scope="col"
-                className={hasScores && totals[p] === best ? 'scoreboard__leader' : undefined}
-                style={{ '--avatar': `var(--player-${p + 1})` }}
-              >
-                <span className="scoreboard__name">
-                  <span>{name}</span>
-                </span>
-                <span className="scoreboard__total">{totals[p]}</span>
-                {lastRound && (
-                  <span className={`scoreboard__delta scoreboard__delta--${lastRound[p].points > 0 ? 'hit' : 'miss'}`}>
-                    {formatPoints(lastRound[p].points)}
-                  </span>
-                )}
+              <th key={p} scope="col" className="scoreboard__head">
+                <span aria-hidden="true">{name.slice(0, SHORT_NAME)}</span>
+                <span className="visually-hidden">{name}</span>
               </th>
             ))}
           </tr>
@@ -50,7 +36,7 @@ export default function Scoreboard({ players, table, current, onEditRound }) {
               </td>
               {cells.map((cell, p) => (
                 <td key={p}>
-                  {cell.total}
+                  <span className="scoreboard__cell-total">{cell.total}</span>
                   <span className={`scoreboard__detail scoreboard__detail--${cell.points > 0 ? 'hit' : 'miss'}`}>
                     {cell.bid}/{cell.tricks} {formatPoints(cell.points)}
                   </span>
@@ -58,21 +44,8 @@ export default function Scoreboard({ players, table, current, onEditRound }) {
               ))}
             </tr>
           ))}
-          {current && (
-            <tr className="scoreboard__row scoreboard__row--current">
-              <td className="scoreboard__round">{table.length + 1}</td>
-              {current.bids.map((bid, p) => (
-                <td key={p}>
-                  <span className="scoreboard__detail">
-                    {current.phase === 'tricks' ? t.bidShort(bid) : '…'}
-                  </span>
-                </td>
-              ))}
-            </tr>
-          )}
         </tbody>
       </table>
-      {hasScores && <p className="hint hint--center">{t.editHint}</p>}
     </section>
   )
 }

@@ -27,9 +27,7 @@ export default function RoundEntry({ players, totals, round, current, hookRule, 
     <section className="card">
       <h2 className="card__title">
         {isBids ? t.bids : t.tricks}
-        <span className="card__meta">
-          {sum(values)} / {round.cards}
-        </span>
+        <span className="card__meta">{t.tricksCount(sum(values), round.cards)}</span>
       </h2>
 
       <ul className="entries">

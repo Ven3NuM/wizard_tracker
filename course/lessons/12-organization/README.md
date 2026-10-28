@@ -26,13 +26,17 @@ src/
 │   ├── Setup.jsx
 │   ├── GameScreen.jsx
 │   ├── RoundHeader.jsx  γύρος, φύλλα, dealer
+│   ├── GameMenu.jsx   το μενού ⋯ (popover)
 │   ├── RoundEntry.jsx
+│   ├── Standings.jsx  η κατάταξη
 │   ├── Scoreboard.jsx
 │   ├── EditRoundDialog.jsx
 │   ├── FinalResults.jsx
 │   ├── Stepper.jsx
 │   ├── LanguageSwitch.jsx  ΕΛ / EN στην κεφαλίδα
-│   └── Avatar.jsx     το αρχικό του παίκτη στο χρώμα της θέσης του
+│   ├── Avatar.jsx     το αρχικό του παίκτη στο χρώμα της θέσης του
+│   ├── icons.jsx      μικρά εικονίδια SVG
+│   └── format.js      +20 / -10
 ├── i18n/              τα κείμενα της οθόνης
 │   ├── el.js, en.js   ελληνικά, αγγλικά
 │   ├── index.js       οι γλώσσες, το Context, το useTranslation
@@ -158,7 +162,7 @@ browser. Την πρώτη φορά, η γλώσσα βγαίνει από τη 
 `index.css` είναι μέσα στο `src/` και το εισάγει το `main.jsx`. Λίγα πράγματα για το πώς είναι γραμμένο,
 αν και το CSS δεν είναι το θέμα του μαθήματος:
 
-- **BEM:** `block`, `block__element`, `block--modifier` (π.χ. `scoreboard`, `scoreboard__total`,
+- **BEM:** `block`, `block__element`, `block--modifier` (π.χ. `scoreboard`, `scoreboard__row`,
   `button--secondary`). Από το όνομα καταλαβαίνεις πού ανήκει κάθε κλάση.
 - **Μεταβλητές CSS** στο `:root` (`--color-accent`, `--font-heading`) αντί για χρώματα σκορπισμένα παντού.
 - **Mobile first:** τα βασικά styles είναι για κινητό, και ένα `@media (min-width: 600px)` προσθέτει

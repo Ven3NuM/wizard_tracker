@@ -61,6 +61,17 @@ export const scoreTable = (rounds) => {
 export const totalsOf = (table, playerCount) =>
   table.at(-1)?.map((cell) => cell.total) ?? Array(playerCount).fill(0)
 
+// How many rounds each player called exactly
+export const hitsOf = (table, playerCount) =>
+  Array.from({ length: playerCount }, (_, p) => table.filter((cells) => cells[p].points > 0).length)
+
+// The most points anyone scored in one round: { player, points }, the earliest on a tie
+export const bestRound = (table) =>
+  table.reduce((best, cells) => {
+    const top = Math.max(...cells.map((cell) => cell.points))
+    return best && best.points >= top ? best : { player: cells.findIndex((cell) => cell.points === top), points: top }
+  }, null)
+
 // Highest total first; players with the same total share a place
 export const ranking = (players, totals) => {
   const sorted = players

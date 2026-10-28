@@ -31,10 +31,10 @@ npm run lesson 3      # course lesson 3 in the browser; `npm run lesson 13 test`
 ```
 src/
 ├── game/            logic only, never imports from ui/
-│   ├── rules.js     pure rules: roundInfo, roundScore, validation, scoreTable, ranking
+│   ├── rules.js     pure rules: roundInfo, roundScore, validation, scoreTable, ranking, hitsOf, bestRound
 │   ├── reducer.js   state shape (documented at the top) and actions
 │   └── useGame.js   useReducer + versioned localStorage persistence
-├── ui/              Setup, GameScreen, RoundHeader, RoundEntry, Scoreboard, EditRoundDialog, FinalResults, Stepper, Avatar, LanguageSwitch
+├── ui/              Setup, GameScreen, RoundHeader, GameMenu, RoundEntry, Standings, Scoreboard, EditRoundDialog, FinalResults, Stepper, Avatar, LanguageSwitch; icons.jsx, format.js
 ├── i18n/            el.js, en.js strings; index.js (LANGUAGES, LanguageContext, useTranslation); LanguageProvider.jsx
 ├── App.jsx, main.jsx, index.css
 ```

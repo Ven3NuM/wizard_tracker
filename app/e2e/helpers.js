@@ -17,6 +17,14 @@ export async function expectRound(page, label, dealer) {
   await expect(page.locator('.round__dealer')).toHaveText(dealer)
 }
 
+// Checks each player's total in the standings: { Άννα: 30, … }
+export async function expectTotals(page, totals) {
+  for (const [name, total] of Object.entries(totals)) {
+    const row = page.locator('.standings__row').filter({ hasText: name })
+    await expect(row.locator('.standings__total')).toHaveText(String(total))
+  }
+}
+
 // Presses + on a player's stepper `times` times
 export async function step(page, name, column, times) {
   const plus = page.getByRole('button', { name: `${name}, ${column}: αύξηση` })

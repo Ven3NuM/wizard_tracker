@@ -8,19 +8,20 @@ const en = {
   // Setup
   language: 'Language',
   setupSubtitle: "Who's playing tonight?",
-  playerCount: 'Number of players',
+  playerCount: 'Players',
   playerName: (n) => `Player ${n}`,
-  firstDealer: 'First dealer',
-  drawDealer: 'Draw',
+  chooseDealer: (name) => `${name} deals first`,
+  drawDealer: 'Draw dealer',
   hookRule: 'Hook rule',
-  hookRuleHelp: "Bids can't add up to the number of cards, the dealer bids last.",
+  hookRuleHelp: "Bids can't add up to the number of cards",
   startGame: 'Start',
   roundsCount: (n) => `${n} rounds`,
 
   // Game
   roundOf: (round, total) => `Round ${round} of ${total}`,
   cardsWord: (n) => (n === 1 ? 'card' : 'cards'),
-  firstBidderIs: (name) => `${name} bids first`,
+  firstBidderIs: (name) => `${name} starts`,
+  menu: 'Menu',
   newGame: 'New game',
   confirmNewGame: 'Start a new game? The current score will be lost.',
   rematch: 'Rematch',
@@ -28,6 +29,7 @@ const en = {
   // Round entry
   bids: 'Bids',
   tricks: 'Tricks',
+  tricksCount: (taken, cards) => `${taken} / ${cards} tricks`,
   dealer: 'Deals',
   firstBidder: 'Bids first',
   bidHint: (n) => `bid ${n}`,
@@ -51,12 +53,16 @@ const en = {
   increase: (label) => `${label}: increase`,
 
   // Scoreboard
+  standings: 'Standings',
+  afterRounds: (n) => (n === 1 ? 'after 1 round' : `after ${n} rounds`),
   roundColumn: 'Round',
-  bidShort: (n) => `bid ${n}`,
-  editHint: 'Tap a round to edit it.',
+  editHint: 'Rounds · tap to edit',
 
   // Final results
-  gameOver: 'Game over',
+  gameOver: (rounds) => `${rounds} rounds · done`,
+  winner: (names) => `${names.length === 1 ? 'Winner' : 'Winners'}: ${names.join(' & ')}`,
+  mostAccurate: 'Most accurate',
+  biggestRound: 'Biggest round',
 
   // Validation errors, keyed by the `type` the rules return
   errors: {

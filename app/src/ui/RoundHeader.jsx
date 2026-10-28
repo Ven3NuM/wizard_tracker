@@ -1,8 +1,8 @@
 import { totalRounds } from '../game/rules'
 import { useTranslation } from '../i18n'
 
-// Where we are in the game, how many cards are dealt and who deals
-export default function RoundHeader({ players, round }) {
+// Where we are in the game, how many cards are dealt and who deals; children sit right of the title
+export default function RoundHeader({ players, round, children }) {
   const { t } = useTranslation()
   const total = totalRounds(players.length)
 
@@ -14,7 +14,10 @@ export default function RoundHeader({ players, round }) {
 
   return (
     <section className="round">
-      <h2 className="round__label">{t.roundOf(round.index + 1, total)}</h2>
+      <div className="round__bar">
+        <h1 className="round__label">{t.roundOf(round.index + 1, total)}</h1>
+        {children}
+      </div>
       <div className="round__progress" aria-hidden="true">
         {Array.from({ length: total }, (_, i) => (
           <span key={i} className={stepClass(i)} />

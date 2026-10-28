@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
+  bestRound,
   bidsError,
   forbiddenDealerBid,
+  hitsOf,
   ranking,
   roundInfo,
   roundScore,
@@ -99,5 +101,23 @@ describe('scores', () => {
       { name: 'C', total: 50, place: 1 },
       { name: 'A', total: 20, place: 3 },
     ])
+  })
+})
+
+describe('end of game stats', () => {
+  const table = scoreTable([
+    { bids: [1, 0, 0], tricks: [1, 0, 0] }, // +30 +20 +20
+    { bids: [0, 2, 0], tricks: [0, 2, 0] }, // +20 +40 +20
+    { bids: [3, 0, 0], tricks: [0, 3, 0] }, // -30 -30 +20
+  ])
+
+  it('counts the rounds each player called exactly', () => {
+    expect(hitsOf(table, 3)).toEqual([2, 2, 3])
+    expect(hitsOf([], 3)).toEqual([0, 0, 0])
+  })
+
+  it('finds the best single round', () => {
+    expect(bestRound(table)).toEqual({ player: 1, points: 40 })
+    expect(bestRound([])).toBeNull()
   })
 })
