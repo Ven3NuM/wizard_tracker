@@ -18,11 +18,31 @@ function Icon({ children, size = 20, strokeWidth = 2 }) {
   )
 }
 
-export function StarIcon() {
+// The app icon (two cards, the front one with a W) for the header. Unlike the stroke icons it has its own colors.
+export function LogoIcon() {
   return (
-    <Icon strokeWidth={2.2}>
-      <path d="M12 3l2.2 5.3L20 9l-4.4 3.8L17 18.5 12 15.6 7 18.5l1.4-5.7L4 9l5.8-.7z" />
-    </Icon>
+    <svg viewBox="96 106 312 312" aria-hidden="true">
+      <rect
+        x="-92"
+        y="-128"
+        width="184"
+        height="256"
+        rx="26"
+        transform="translate(222 268) rotate(-13)"
+        style={{ fill: 'var(--color-raised)' }}
+      />
+      <g transform="translate(290 250) rotate(9)">
+        <rect x="-92" y="-128" width="184" height="256" rx="26" style={{ fill: 'var(--color-accent)' }} />
+        <path
+          d="M-54-50L-28 54 0-16 28 54 54-50"
+          fill="none"
+          strokeWidth="28"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ stroke: 'var(--color-bg)' }}
+        />
+      </g>
+    </svg>
   )
 }
 

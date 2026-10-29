@@ -4,7 +4,7 @@ import { useTranslation } from './i18n'
 import Setup from './ui/Setup'
 import GameScreen from './ui/GameScreen'
 import LanguageSwitch from './ui/LanguageSwitch'
-import { StarIcon } from './ui/icons'
+import { LogoIcon } from './ui/icons'
 import { keepScreenOn } from './native'
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
         <>
           <header className="app__header">
             <span className="app__logo">
-              <StarIcon />
+              <LogoIcon />
             </span>
             <h1 className="app__title">{t.appTitle}</h1>
             <LanguageSwitch />

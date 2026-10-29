@@ -13,12 +13,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <!-- Shows around the web view where older WebViews get padding instead of safe-area values -->
+        <item name="android:windowBackground">@color/app_background</item>
     </style>
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
         <!-- Android 12+ draws its own splash: the icon on this color, the web app background -->
-        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenBackground">@color/app_background</item>
     </style>
 </resources>
