@@ -8,7 +8,7 @@ An npm workspace with three parts:
 
 - **`webapp/`**: Wizard Tracker, a Greek/English, mobile-first score keeper for the Wizard card game (3-6 players, 60 / players rounds). All the React code lives here. Published to GitHub Pages at `/wizard_tracker/`.
 - **`app/`**: the Android app (iOS later): a Capacitor 8 shell around `webapp/`'s native build. No React code of its own; never copy `webapp/src` here.
-- **`course/`**: a Greek React course for the owner, who knows HTML/CSS/JS but is learning React. 16 lessons rebuild the app step by step. Each lesson folder has a `README.md` (theory, Greek) and a runnable `src/` snapshot of the app at that step.
+- **`course/`**: a Greek React course for the owner, who knows HTML/CSS/JS but is learning React. Lesson 00 explains the tooling (terminal, Node, npm, Vite, ESLint, git), then lessons 01-16 rebuild the app step by step; `course/GLOSSARY.md` defines every term. Each lesson folder has a `README.md` (theory, Greek) and a runnable `src/` snapshot of the app at that step.
 
 The user writes in Greek; answer in Greek.
 
@@ -72,7 +72,8 @@ Rules of the codebase:
 - Lessons 01-11 import the app's CSS (`../../../../webapp/src/index.css`) and hardcode Greek strings.
 - Lesson 12 (folders, final look): `webapp/src` with `game/`, `ui/`, `index.css`, but Greek written inline instead of `t.…` (no `i18n/`, `LanguageSwitch`, `native.js`; per-component `errorMessages` like lessons 05-11). Lesson 13 (Context, two languages) is a copy of `webapp/src` without tests; lesson 14 (testing) is `webapp/src` with tests; lessons 15 (build, PWA, deploy) and 16 (Capacitor) are theory only.
 - **When `webapp/src` changes, update lesson 12 (same change, Greek inline), lessons 13 and 14 (copy), and any earlier lesson whose README or code shows the changed part.**
-- Lesson READMEs: Greek prose, English code and comments, sections Στόχοι → θεωρία → «Ο κώδικας αυτού του μαθήματος» → «Δοκίμασέ το» → «Ασκήσεις» (two, each solution in `<details>`, checked against that lesson's code) → «Σύνοψη» → links to react.dev.
+- Lesson READMEs: Greek prose, English code and comments, sections Στόχοι → «Πριν ξεκινήσεις» box (each new tool/term: what it is and why we need it, then a link to the glossary) → θεωρία → «Ο κώδικας αυτού του μαθήματος» → «Δοκίμασέ το» → «Ασκήσεις» (two, each solution in `<details>`, checked against that lesson's code) → «Σύνοψη» → links to react.dev.
+- A new term in any lesson gets a line in `course/GLOSSARY.md` (with the lesson number) and, if it is central to the lesson, in its «Πριν ξεκινήσεις» box. Lesson 00 (tools) is theory only.
 - Course code reads like it was written for a learner: one idea per line, a named variable over a nested ternary, a loop over a clever `reduce`, identity by index (`seat`) not by display text.
 
 ## Root
