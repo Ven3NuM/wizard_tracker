@@ -1,25 +1,18 @@
 {
-  "name": "wizard-tracker",
+  "name": "wizard-tracker-native",
   "private": true,
-  "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:e2e": "playwright test -c e2e"
+    "build": "npm run build:native --prefix ../webapp && cap sync android",
+    "open": "cap open android"
   },
   "dependencies": {
-    "@fontsource/commissioner": "^5.3.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "@capacitor-community/keep-awake": "^8.0.1",
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.1",
-    "@vitejs/plugin-react": "^6.1.2",
-    "vite": "^8.3.5",
-    "vite-plugin-pwa": "^2.0.0",
-    "vitest": "^5.0.5"
+    "@capacitor/cli": "^8.6.0"
   }
 }

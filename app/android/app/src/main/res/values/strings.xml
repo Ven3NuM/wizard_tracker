@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Wizard Tracker</string>
+    <string name="title_activity_main">Wizard Tracker</string>
+    <string name="package_name">io.github.ven3num.wizardtracker</string>
+    <string name="custom_url_scheme">io.github.ven3num.wizardtracker</string>
+</resources>

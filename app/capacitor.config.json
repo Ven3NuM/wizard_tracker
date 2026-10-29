@@ -1,0 +1,13 @@
+{
+  "appId": "io.github.ven3num.wizardtracker",
+  "appName": "Wizard Tracker",
+  "webDir": "../webapp/dist-native",
+  "backgroundColor": "#0E131B",
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "style": "DARK",
+      "initialViewportFitValueHint": "cover"
+    }
+  }
+}

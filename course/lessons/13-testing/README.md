@@ -6,7 +6,7 @@
 ```bash
 npm run lesson 13          # η εφαρμογή, όπως πάντα
 npm run lesson 13 test     # τα unit tests αυτού του μαθήματος
-npm run test:e2e           # τα e2e tests της εφαρμογής (app/e2e)
+npm run test:e2e           # τα e2e tests της εφαρμογής (webapp/e2e)
 ```
 
 ## Γιατί tests
@@ -81,7 +81,7 @@ it('goes back to bids keeping them', () => {
 
 ## Playwright: e2e
 
-Τα e2e tests ζουν στο `app/e2e/`. Το Playwright χτίζει την εφαρμογή, ανοίγει Chromium σε μέγεθος κινητού
+Τα e2e tests ζουν στο `webapp/e2e/`. Το Playwright χτίζει την εφαρμογή, ανοίγει Chromium σε μέγεθος κινητού
 (Pixel 7), και κάνει ό,τι θα έκανε ένας παίκτης:
 
 ```js

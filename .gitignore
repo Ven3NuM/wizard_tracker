@@ -4,6 +4,7 @@ node_modules/
 # Build output, published by CI, never committed
 dist/
 dev-dist/
+dist-native/
 
 # Playwright
 test-results/
@@ -25,3 +26,8 @@ Thumbs.db
 
 # Personal Claude Code settings
 .claude/settings.local.json
+
+# Android signing keys: keep them safe outside the repo (README «Υπογραφή»)
+*.jks
+*.keystore
+*.p12
