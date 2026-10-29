@@ -4,9 +4,9 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
-// One config for app/ and course/
+// One config for webapp/ and course/ (app/ is the native shell, no code of ours to lint)
 export default defineConfig([
-  globalIgnores(['**/dist', '**/dev-dist', '**/test-results', '**/playwright-report']),
+  globalIgnores(['**/dist', '**/dist-native', 'app/android', '**/dev-dist', '**/test-results', '**/playwright-report']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [js.configs.recommended, reactHooks.configs.flat.recommended, reactRefresh.configs.vite],

@@ -3,17 +3,20 @@
   "private": true,
   "type": "module",
   "workspaces": [
+    "webapp",
     "app",
     "course"
   ],
   "scripts": {
-    "dev": "npm run dev -w app",
-    "build": "npm run build -w app",
-    "preview": "npm run preview -w app",
-    "test": "npm test -w app",
-    "test:e2e": "npm run test:e2e -w app",
+    "dev": "npm run dev -w webapp",
+    "build": "npm run build -w webapp",
+    "preview": "npm run preview -w webapp",
+    "test": "npm test -w webapp",
+    "test:e2e": "npm run test:e2e -w webapp",
     "lesson": "npm run lesson -w course --",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "app:build": "npm run build -w app",
+    "app:open": "npm run open -w app"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

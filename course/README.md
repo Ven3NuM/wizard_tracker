@@ -1,7 +1,7 @@
 # Μαθαίνω React χτίζοντας τον Wizard Tracker
 
-Ένα μάθημα «εξαμήνου» σε 14 βήματα. Ξεκινάμε από ένα `<h1>` και φτάνουμε στην εφαρμογή του φακέλου
-`app/`, ακριβώς όπως δημοσιεύεται. Κάθε μάθημα έχει **θεωρία** (`README.md`) και **τον κώδικα της
+Ένα μάθημα «εξαμήνου» σε 15 βήματα. Ξεκινάμε από ένα `<h1>` και φτάνουμε στην εφαρμογή του φακέλου
+`webapp/`, ακριβώς όπως δημοσιεύεται. Κάθε μάθημα έχει **θεωρία** (`README.md`) και **τον κώδικα της
 εφαρμογής σε εκείνο το σημείο** (`src/`), που τρέχει μόνος του.
 
 **Προαπαιτούμενα:** HTML, CSS και JavaScript (συναρτήσεις, πίνακες, αντικείμενα). Όσα της σύγχρονης
@@ -43,9 +43,10 @@ npm run lesson 13 test  # τρέχει τα tests του μαθήματος 13
 | 9 | [Παραγόμενα δεδομένα](lessons/09-derived-state/README.md) | υπολογισμός αντί για αποθήκευση | πίνακας σκορ, κατάταξη, ρεβάνς |
 | 10 | [Effects και custom hooks](lessons/10-effects-custom-hooks/README.md) | `useEffect`, πότε όχι effect, δικά σου hooks | αποθήκευση στο `localStorage` |
 | 11 | [Refs και dialog](lessons/11-refs-dialog/README.md) | `useRef`, `<dialog>`, πρόχειρο state | διόρθωση γύρου |
-| 12 | [Οργάνωση και Context](lessons/12-organization/README.md) | φάκελοι, i18n, Context, checklist καθαρού κώδικα | ελληνικά/αγγλικά, = `app/src` |
+| 12 | [Οργάνωση και Context](lessons/12-organization/README.md) | φάκελοι, i18n, Context, checklist καθαρού κώδικα | ελληνικά/αγγλικά, = `webapp/src` |
 | 13 | [Testing](lessons/13-testing/README.md) | Vitest, Playwright, τι ελέγχεις και πώς | tests |
-| 14 | [Build, PWA, deploy](lessons/14-build-pwa-deploy/README.md) | `dist/`, service worker, CI/CD | (θεωρία, με βάση το `app/`) |
+| 14 | [Build, PWA, deploy](lessons/14-build-pwa-deploy/README.md) | `dist/`, service worker, CI/CD | (θεωρία, με βάση το `webapp/`) |
+| 15 | [Android app με Capacitor](lessons/15-native-app/README.md) | WebView, plugins, safe areas, υπογραφή, releases | (θεωρία, με βάση το `webapp/` και το `app/`) |
 
 ## Για να συνεχίσεις
 
