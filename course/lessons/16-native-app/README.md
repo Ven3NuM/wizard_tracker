@@ -1,4 +1,4 @@
-# Μάθημα 15 · Από web app σε Android app με Capacitor
+# Μάθημα 16 · Από web app σε Android app με Capacitor
 
 **Στόχοι:** να καταλάβεις πώς η ίδια εφαρμογή React γίνεται εφαρμογή Android που κατεβαίνει από το
 GitHub (και αργότερα από το Play Store), τι αλλάζει στον κώδικα και τι όχι, και πώς βγαίνει μια νέα έκδοση.
@@ -7,7 +7,7 @@ GitHub (και αργότερα από το Play Store), τι αλλάζει σ�
 
 ## Τρεις τρόποι για εφαρμογή κινητού
 
-| | PWA (μάθημα 14) | Capacitor | React Native |
+| | PWA (μάθημα 15) | Capacitor | React Native |
 | --- | --- | --- | --- |
 | Τι είναι | ιστοσελίδα που εγκαθίσταται | η ιστοσελίδα μέσα σε πραγματικό app | app με native στοιχεία οθόνης |
 | Κώδικας | ο δικός μας | ο δικός μας, σχεδόν όπως είναι | ξαναγράφεται όλο το UI (`<View>` αντί για `<div>`, χωρίς CSS) |
@@ -39,7 +39,7 @@ Native κρατάει τα components, το state και τα hooks, αλλά τ
 Το repo έχει πια δύο φακέλους για την εφαρμογή:
 
 ```
-webapp/   όλος ο κώδικας React (ό,τι έμαθες ως το μάθημα 14)
+webapp/   όλος ο κώδικας React (ό,τι έμαθες ως το μάθημα 15)
 app/      το κέλυφος: capacitor.config.json και το Android project (app/android/)
 ```
 
@@ -176,6 +176,46 @@ git tag v2.1.0 && git push --tags
    άλλαξε κάτι και πάτα «πίσω».
 3. Με το Android Studio: `npm run app:build`, `npm run app:open`, ▶ Run σε emulator. Άλλαξε ένα
    κείμενο στο `el.js`, ξανατρέξε `npm run app:build` και ▶ Run.
+
+## Ασκήσεις
+
+**1. Δόνηση στο τέλος του γύρου.** Με το plugin `@capacitor/haptics`, κάνε το κινητό να δονείται
+ελαφρά όταν πατιέται «Τέλος γύρου». Στον browser δεν πρέπει να γίνεται τίποτα.
+
+<details>
+<summary>Λύση</summary>
+
+`npm install @capacitor/haptics -w webapp -w app` (στο `webapp` για τη JavaScript, στο `app` για να το
+βρει το Android project). Στο `native.js`:
+
+```js
+import { Haptics, ImpactStyle } from '@capacitor/haptics'
+
+export function tap() {
+  if (!isNative) return
+  Haptics.impact({ style: ImpactStyle.Light }).catch(() => {})
+}
+```
+
+Στο `RoundEntry`, στο κουμπί του γύρου: `onClick={() => { if (!isBids) tap(); dispatch(…) }}`. Μετά
+`npm run app:build` για να μπει το plugin στο Android project. Ό,τι αφορά το κινητό μένει στο
+`native.js`, και τα components απλώς το καλούν.
+
+</details>
+
+**2. Νέα έκδοση.** Διόρθωσες ένα bug και θέλεις να βγει η έκδοση 1.0.1 στο GitHub. Ποια είναι τα βήματα;
+
+<details>
+<summary>Λύση</summary>
+
+1. `"version": "1.0.1"` στο `webapp/package.json` (το Android παίρνει versionCode 10001).
+2. Commit και push.
+3. `git tag v1.0.1 && git push origin v1.0.1`.
+
+Το workflow «Release» κάνει τα υπόλοιπα: tests, build, υπογραφή, Release με `.apk` και `.aab`. Όποιος
+έχει το 1.0.0 εγκαθιστά το νέο από πάνω, γιατί έχει την ίδια υπογραφή και μεγαλύτερο versionCode.
+
+</details>
 
 ## Σύνοψη
 

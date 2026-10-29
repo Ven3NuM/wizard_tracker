@@ -1,18 +1,10 @@
-import { useEffect } from 'react'
 import { useGame } from './game/useGame'
-import { useTranslation } from './i18n'
 import Setup from './ui/Setup'
 import GameScreen from './ui/GameScreen'
-import LanguageSwitch from './ui/LanguageSwitch'
 import { LogoIcon } from './ui/icons'
-import { keepScreenOn } from './native'
 
 export default function App() {
-  const { t } = useTranslation()
   const [{ game, lastSetup }, dispatch] = useGame()
-  const playing = Boolean(game)
-
-  useEffect(() => keepScreenOn(playing), [playing])
 
   return (
     <main className="app">
@@ -24,8 +16,7 @@ export default function App() {
             <span className="app__logo">
               <LogoIcon />
             </span>
-            <h1 className="app__title">{t.appTitle}</h1>
-            <LanguageSwitch />
+            <h1 className="app__title">Wizard Tracker</h1>
           </header>
           <Setup
             initialSetup={lastSetup}

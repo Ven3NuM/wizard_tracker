@@ -10,7 +10,7 @@
 | --- | --- |
 | [`webapp/`](webapp) | Η εφαρμογή: όλος ο κώδικας React, και η έκδοση για browser (GitHub Pages) |
 | [`app/`](app) | Η εφαρμογή για κινητό (Android, αργότερα iOS): το `webapp/` μέσα σε native κέλυφος με [Capacitor](https://capacitorjs.com) |
-| [`course/`](course/README.md) | Μάθημα React σε 15 βήματα, που καταλήγει στην ίδια εφαρμογή |
+| [`course/`](course/README.md) | Μάθημα React σε 16 βήματα, που καταλήγει στην ίδια εφαρμογή |
 
 ## Εγκατάσταση στο Android
 

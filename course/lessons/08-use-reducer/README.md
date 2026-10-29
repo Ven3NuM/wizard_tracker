@@ -56,7 +56,7 @@ const [state, dispatch] = useReducer(reducer, initialState)
 - **Όλοι οι τρόποι που αλλάζει το παιχνίδι είναι σε ένα αρχείο**, τον έναν μετά τον άλλο. Αν κάτι πάει
   στραβά με το σκορ, ξέρεις πού να κοιτάξεις.
 - Ο reducer είναι **καθαρή συνάρτηση**: δεν ξέρει τίποτα από React, και τον ελέγχεις με tests
-  (μάθημα 13) δίνοντας state και action και κοιτάζοντας τι βγαίνει.
+  (μάθημα 14) δίνοντας state και action και κοιτάζοντας τι βγαίνει.
 - Τα components γίνονται απλά: δείχνουν και στέλνουν actions.
 
 ## Το σχήμα του state
@@ -132,6 +132,54 @@ return withCurrent({ [field]: replaceAt(game.current[field], action.player, acti
 2. Ενεργοποίησε τον κανόνα hook και δες τι γράφει κάτω από τον dealer καθώς αλλάζεις δηλώσεις.
 3. Βάλε `console.log(action.type, action)` στην αρχή του reducer και παρακολούθησε στην κονσόλα κάθε
    ενέργεια του χρήστη. Αυτό είναι όλο το «ημερολόγιο» της εφαρμογής.
+
+## Ασκήσεις
+
+**1. Μηδενισμός δηλώσεων.** Πρόσθεσε ένα action `RESET_BIDS` που μηδενίζει τις δηλώσεις του τρέχοντος
+γύρου, και ένα κουμπί που το στέλνει (μόνο στη φάση των δηλώσεων).
+
+<details>
+<summary>Λύση</summary>
+
+Στον reducer:
+
+```js
+case 'RESET_BIDS':
+  return withCurrent({ bids: Array(game.players.length).fill(0) })
+```
+
+Στο `RoundEntry`:
+
+```jsx
+{isBids && (
+  <button type="button" className="button button--secondary" onClick={() => dispatch({ type: 'RESET_BIDS' })}>
+    Μηδενισμός
+  </button>
+)}
+```
+
+Το component λέει μόνο **τι** έγινε. Το **πώς** είναι μία γραμμή στον reducer.
+
+</details>
+
+**2. Αναίρεση γύρου.** Πρόσθεσε ένα action `UNDO_ROUND` που παίρνει πίσω τον τελευταίο τελειωμένο γύρο:
+βγαίνει από τα `rounds` και γίνεται ξανά ο τρέχων γύρος, στη φάση των μπαζών, με τις τιμές του.
+
+<details>
+<summary>Λύση</summary>
+
+```js
+case 'UNDO_ROUND': {
+  const last = game.rounds.at(-1)
+  return withGame({ rounds: game.rounds.slice(0, -1), current: { phase: 'tricks', ...last } })
+}
+```
+
+Το `slice(0, -1)` φτιάχνει νέο πίνακα χωρίς το τελευταίο στοιχείο (το `pop()` θα άλλαζε τον παλιό). Ο
+αριθμός του γύρου, ο dealer και τα φύλλα διορθώνονται μόνα τους, γιατί βγαίνουν από το `rounds.length`.
+Το κουμπί να εμφανίζεται μόνο όταν `rounds.length > 0`.
+
+</details>
 
 ## Σύνοψη
 

@@ -141,6 +141,62 @@ const [{ game, lastSetup }, dispatch] = useGame()
 2. Στο DevTools (F12) → Application → Local Storage, δες τι αποθηκεύεται. Σβήσ' το και κάνε refresh.
 3. Άλλαξε το `VERSION` σε 2 και κάνε refresh. Το παλιό save αγνοείται.
 
+## Ασκήσεις
+
+**1. Ο τίτλος της καρτέλας.** Γράψε ένα custom hook `useDocumentTitle(title)` που αλλάζει το
+`document.title`, και χρησιμοποίησέ το στο `App` ώστε η καρτέλα να γράφει «Παιχνίδι · Wizard Tracker»
+στη διάρκεια ενός παιχνιδιού.
+
+<details>
+<summary>Λύση</summary>
+
+`useDocumentTitle.js`:
+
+```js
+import { useEffect } from 'react'
+
+// Keeps the browser tab title in sync with the app
+export function useDocumentTitle(title) {
+  useEffect(() => {
+    document.title = title
+  }, [title])
+}
+```
+
+Στο `App`:
+
+```jsx
+useDocumentTitle(game ? 'Παιχνίδι · Wizard Tracker' : 'Wizard Tracker')
+```
+
+Ο τίτλος της καρτέλας είναι **έξω** από τη React, όπως το `localStorage`. Γι' αυτό χρειάζεται effect.
+
+</details>
+
+**2. Βρες το περιττό effect.** Κάποιος έγραψε στο `GameScreen`:
+
+```jsx
+const [table, setTable] = useState([])
+useEffect(() => {
+  setTable(scoreTable(rounds))
+}, [rounds])
+```
+
+Τι κάνει λάθος, και πώς γράφεται σωστά;
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+const table = scoreTable(rounds)
+```
+
+Ο πίνακας βγαίνει από τα `rounds`, άρα είναι υπολογισμός, όχι state. Με το effect η οθόνη σχεδιάζεται
+πρώτα με τον **παλιό** πίνακα, μετά τρέχει το effect, αλλάζει το state και ξανασχεδιάζεται: δύο
+σχεδιάσεις αντί για μία, και για μια στιγμή λάθος νούμερα. Effect μόνο για ό,τι είναι έξω από τη React.
+
+</details>
+
 ## Σύνοψη
 
 - `useEffect(fn, deps)`: συγχρονισμός με κάτι έξω από τη React, μετά τη σχεδίαση.

@@ -11,8 +11,8 @@ export default function RoundEntry({ players, round, current, hookRule, dispatch
   const isBids = current.phase === 'bids'
   const values = isBids ? current.bids : current.tricks
   const error = isBids ? bidsError(current.bids, round, hookRule) : tricksError(current.tricks, round)
-  // Fewer tricks than cards only means they aren't all entered yet, that's not an error
-  const remaining = !isBids && error ? round.cards - error.total : 0
+  // Fewer tricks than cards only means they aren't all entered yet: a hint, not an error
+  const remaining = isBids ? 0 : round.cards - sum(current.tricks)
   const forbidden = isBids && hookRule ? forbiddenDealerBid(current.bids, round) : null
 
   return (

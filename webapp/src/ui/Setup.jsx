@@ -97,7 +97,12 @@ export default function Setup({ initialSetup, onStart }) {
       </button>
 
       <label className="setup__group checkbox">
-        <input type="checkbox" role="switch" checked={hookRule} onChange={(event) => setHookRule(event.target.checked)} />
+        <input
+          type="checkbox"
+          role="switch"
+          checked={hookRule}
+          onChange={(event) => setHookRule(event.target.checked)}
+        />
         <span>
           {t.hookRule}
           <small className="hint">{t.hookRuleHelp}</small>

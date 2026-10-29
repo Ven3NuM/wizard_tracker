@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { roundInfo, scoreTable, totalsOf } from '../game/rules'
-import { useTranslation } from '../i18n'
 import RoundHeader from './RoundHeader'
 import GameMenu from './GameMenu'
 import RoundEntry from './RoundEntry'
@@ -10,7 +9,6 @@ import EditRoundDialog from './EditRoundDialog'
 import FinalResults from './FinalResults'
 
 export default function GameScreen({ game, dispatch }) {
-  const { t } = useTranslation()
   const { players, rounds, current, hookRule, firstDealer } = game
   const [editing, setEditing] = useState(null) // index of the round being fixed
   const table = scoreTable(rounds)
@@ -19,7 +17,7 @@ export default function GameScreen({ game, dispatch }) {
 
   const handleNewGame = () => {
     // A finished game has nothing left to lose
-    if (!current || window.confirm(t.confirmNewGame)) dispatch({ type: 'NEW_GAME' })
+    if (!current || window.confirm('Νέο παιχνίδι; Το τρέχον σκορ θα χαθεί.')) dispatch({ type: 'NEW_GAME' })
   }
 
   const handleSave = (updated) => {

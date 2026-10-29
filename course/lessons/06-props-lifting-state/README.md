@@ -94,6 +94,71 @@ const [game, setGame] = useState(null)
 3. Ζωγράφισε το `GameScreen` δύο φορές μέσα στο `App`. Και τα δύο δείχνουν το ίδιο παιχνίδι, γιατί
    παίρνουν τα ίδια props.
 
+## Ασκήσεις
+
+**1. Αντιστροφή σειράς.** Στην οθόνη του παιχνιδιού, πρόσθεσε ένα κουμπί «Αντιστροφή σειράς» που
+αντιστρέφει τη σειρά των παικτών. Το παιχνίδι το κρατάει το `App`. Πώς φτάνει εκεί το πάτημα;
+
+<details>
+<summary>Λύση</summary>
+
+Στο `App.jsx`, ένα νέο callback:
+
+```jsx
+<GameScreen
+  game={game}
+  onNewGame={() => setGame(null)}
+  onReverse={() => setGame({ ...game, players: [...game.players].reverse() })}
+/>
+```
+
+Στο `GameScreen.jsx`:
+
+```jsx
+export default function GameScreen({ game, onNewGame, onReverse }) {
+  …
+  <button type="button" className="button button--secondary" onClick={onReverse}>
+    Αντιστροφή σειράς
+  </button>
+```
+
+Το `GameScreen` δεν αλλάζει το παιχνίδι. Λέει «πατήθηκε» προς τα πάνω, και αυτός που έχει το state το
+αλλάζει. Το `[...game.players]` φτιάχνει αντίγραφο, γιατί το `reverse()` αλλάζει τον πίνακα στον οποίο
+καλείται. Πρόσεξε ότι ο dealer είναι **θέση** (`firstDealer`), οπότε μετά την αντιστροφή μοιράζει άλλος.
+
+</details>
+
+**2. Ένα component για κάθε παίκτη.** Βγάλε τη γραμμή κάθε παίκτη (το `<li>`) σε ένα component
+`PlayerRow` με props `name` και `isDealer`.
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+function PlayerRow({ name, isDealer }) {
+  return (
+    <li className="entry">
+      <span className="entry__name">
+        {name}
+        {isDealer && <span className="badge">Dealer</span>}
+      </span>
+    </li>
+  )
+}
+```
+
+Και στο `GameScreen`:
+
+```jsx
+{players.map((name, p) => (
+  <PlayerRow key={p} name={name} isDealer={p === firstDealer} />
+))}
+```
+
+Το `key` μπαίνει εκεί που γίνεται το `map`, όχι μέσα στο `PlayerRow`.
+
+</details>
+
 ## Σύνοψη
 
 - Props: τα ορίσματα ενός component, μόνο για ανάγνωση.

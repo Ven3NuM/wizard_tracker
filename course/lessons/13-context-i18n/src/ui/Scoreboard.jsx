@@ -34,14 +34,17 @@ export default function Scoreboard({ players, table, onEditRound }) {
                   {r + 1}
                 </button>
               </td>
-              {cells.map((cell, p) => (
-                <td key={p}>
-                  <span className="scoreboard__cell-total">{cell.total}</span>
-                  <span className={`scoreboard__detail scoreboard__detail--${cell.points > 0 ? 'hit' : 'miss'}`}>
-                    {cell.bid}/{cell.tricks} {formatPoints(cell.points)}
-                  </span>
-                </td>
-              ))}
+              {cells.map((cell, p) => {
+                const result = cell.points > 0 ? 'hit' : 'miss'
+                return (
+                  <td key={p}>
+                    <span className="scoreboard__cell-total">{cell.total}</span>
+                    <span className={`scoreboard__detail scoreboard__detail--${result}`}>
+                      {cell.bid}/{cell.tricks} {formatPoints(cell.points)}
+                    </span>
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>

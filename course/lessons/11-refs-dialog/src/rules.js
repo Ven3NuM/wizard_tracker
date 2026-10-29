@@ -23,8 +23,8 @@ export const roundScore = (bid, tricks) =>
 
 // Hook rule: the dealer may not bid the number that makes the bids add up to the cards
 export const forbiddenDealerBid = (bids, { cards, dealer }) => {
-  const others = sum(bids) - bids[dealer]
-  return cards - others >= 0 ? cards - others : null
+  const forbidden = cards - (sum(bids) - bids[dealer])
+  return forbidden >= 0 ? forbidden : null
 }
 
 // Validation returns null when valid, otherwise { type, ...data } describing the problem
@@ -46,25 +46,30 @@ export const tricksError = (tricks, { cards }) => {
   return total === cards ? null : { type: 'tricksSum', total, cards }
 }
 
-// Per round, per player: { bid, tricks, points, total } with a running total
+// Per round, per player: { bid, tricks, points, total }. Each total builds on the round before.
+// `table` is a new array only this function sees, so filling it with push is fine.
 export const scoreTable = (rounds) => {
-  const totals = []
-  return rounds.map(({ bids, tricks }) =>
-    bids.map((bid, p) => {
+  const table = []
+  for (const { bids, tricks } of rounds) {
+    const previous = table.at(-1)
+    const row = bids.map((bid, p) => {
       const points = roundScore(bid, tricks[p])
-      totals[p] = (totals[p] ?? 0) + points
-      return { bid, tricks: tricks[p], points, total: totals[p] }
+      const total = (previous ? previous[p].total : 0) + points
+      return { bid, tricks: tricks[p], points, total }
     })
-  )
+    table.push(row)
+  }
+  return table
 }
 
 export const totalsOf = (table, playerCount) =>
   table.at(-1)?.map((cell) => cell.total) ?? Array(playerCount).fill(0)
 
-// Highest total first; players with the same total share a place
+// Highest total first; players with the same total share a place.
+// `seat` is the player's index in `players`: it identifies them, the name is only for showing.
 export const ranking = (players, totals) => {
   const sorted = players
-    .map((name, p) => ({ name, total: totals[p] }))
+    .map((name, seat) => ({ seat, name, total: totals[seat] }))
     .sort((a, b) => b.total - a.total)
   return sorted.map((entry) => ({
     ...entry,

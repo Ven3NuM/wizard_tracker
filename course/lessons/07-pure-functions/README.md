@@ -48,7 +48,7 @@ export default function Stepper({ label, value, max, onChange }) { … }
 `onChange`. Ένα τέτοιο component λέγεται **controlled**, όπως τα inputs του μαθήματος 3.
 
 Το `label` δεν φαίνεται. Το διαβάζουν οι screen readers («Άννα, Δήλωση: αύξηση»), και θα το
-χρησιμοποιήσουν και τα tests του μαθήματος 13 για να βρίσκουν τα κουμπιά.
+χρησιμοποιήσουν και τα tests του μαθήματος 14 για να βρίσκουν τα κουμπιά.
 
 ## Ποιος έχει τα δεδομένα;
 
@@ -79,6 +79,45 @@ state γίνεται αρκετά σύνθετο ώστε να αξίζει έν
 2. Στο `GameScreen` άλλαξε το `roundInfo(0, …)` σε `roundInfo(3, …)`: τέταρτος γύρος, 4 φύλλα,
    άλλος dealer, χωρίς να αλλάξει τίποτα άλλο.
 3. Πάτα «+» μέχρι το τέλος. Γιατί απενεργοποιείται στο 1;
+
+## Ασκήσεις
+
+**1. Τελευταίος γύρος.** Γράψε στο `rules.js` μια καθαρή συνάρτηση `isLastRound(round, playerCount)` και
+δείξε «Τελευταίος γύρος!» στο `GameScreen` όταν ισχύει. Για να το δεις, άλλαξε προσωρινά το
+`roundInfo(0, …)` σε `roundInfo(19, …)` και παίξε με 3 παίκτες.
+
+<details>
+<summary>Λύση</summary>
+
+```js
+export const isLastRound = (round, playerCount) => round.index + 1 === totalRounds(playerCount)
+```
+
+```jsx
+{isLastRound(round, players.length) && <p className="hint hint--center">Τελευταίος γύρος!</p>}
+```
+
+Η συνάρτηση δεν ξέρει τίποτα από React: παίρνει αριθμούς, επιστρέφει `true`/`false`. Θα τη δοκιμάζαμε
+με ένα test μιας γραμμής (μάθημα 14).
+
+</details>
+
+**2. Ελάχιστη τιμή στο `Stepper`.** Πρόσθεσε ένα prop `min`, με προεπιλογή 0, ώστε το − να
+απενεργοποιείται στο `min` και όχι πάντα στο 0.
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+export default function Stepper({ label, value, min = 0, max, onChange }) {
+  …
+  <button … disabled={value <= min} onClick={() => onChange(value - 1)}>
+```
+
+Το `min = 0` στο destructuring είναι **προεπιλογή**: όπου δεν δίνεται `min`, όλα δουλεύουν όπως πριν.
+Έτσι το component μεγαλώνει χωρίς να αλλάξει κανένα σημείο που ήδη το χρησιμοποιεί.
+
+</details>
 
 ## Σύνοψη
 

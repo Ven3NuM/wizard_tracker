@@ -15,15 +15,15 @@ export default function Standings({ players, table }) {
         <span className="hint">{t.afterRounds(table.length)}</span>
       </h2>
       <ol className="standings__list">
-        {results.map(({ name, total, place }) => {
-          const p = players.indexOf(name)
-          const { points } = lastRound[p]
+        {results.map(({ seat, name, total, place }) => {
+          const { points } = lastRound[seat]
+          const result = points > 0 ? 'hit' : 'miss'
           return (
-            <li key={name} className="standings__row" style={{ '--avatar': `var(--player-${p + 1})` }}>
+            <li key={seat} className="standings__row" style={{ '--avatar': `var(--player-${seat + 1})` }}>
               <span className="standings__place">{place}</span>
               <span className="dot" aria-hidden="true" />
               <span className="standings__name">{name}</span>
-              <span className={`delta delta--${points > 0 ? 'hit' : 'miss'}`}>{formatPoints(points)}</span>
+              <span className={`delta delta--${result}`}>{formatPoints(points)}</span>
               <span className="standings__total">{total}</span>
             </li>
           )

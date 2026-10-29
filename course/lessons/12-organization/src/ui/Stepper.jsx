@@ -1,15 +1,13 @@
-import { useTranslation } from '../i18n'
 
 // − value + control for a number between 0 and max
 export default function Stepper({ label, value, max, onChange }) {
-  const { t } = useTranslation()
 
   return (
     <div className="stepper" role="group" aria-label={label}>
       <button
         type="button"
         className="stepper__button"
-        aria-label={t.decrease(label)}
+        aria-label={`${label}: μείωση`}
         disabled={value === 0}
         onClick={() => onChange(value - 1)}
       >
@@ -21,7 +19,7 @@ export default function Stepper({ label, value, max, onChange }) {
       <button
         type="button"
         className="stepper__button"
-        aria-label={t.increase(label)}
+        aria-label={`${label}: αύξηση`}
         disabled={value >= max}
         onClick={() => onChange(value + 1)}
       >

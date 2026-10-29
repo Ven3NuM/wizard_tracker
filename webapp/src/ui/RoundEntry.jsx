@@ -9,9 +9,11 @@ export default function RoundEntry({ players, totals, round, current, hookRule, 
   const isBids = current.phase === 'bids'
   const values = isBids ? current.bids : current.tricks
   const error = isBids ? bidsError(current.bids, round, hookRule) : tricksError(current.tricks, round)
-  // Fewer tricks than cards only means they aren't all entered yet, that's not an error
-  const remaining = !isBids && error ? round.cards - error.total : 0
+  // Fewer tricks than cards only means they aren't all entered yet: a hint, not an error
+  const remaining = isBids ? 0 : round.cards - sum(current.tricks)
   const forbidden = isBids && hookRule ? forbiddenDealerBid(current.bids, round) : null
+  // The dealer's line turns orange while their bid is restricted
+  const hintClass = (p) => (p === round.dealer && forbidden !== null ? 'hint hint--warn' : 'hint')
 
   // One line under each name: the player's role this round, else their total so far
   const noteFor = (p) => {
@@ -36,7 +38,7 @@ export default function RoundEntry({ players, totals, round, current, hookRule, 
             <Avatar name={name} index={p} />
             <span className="entry__name">
               {name}
-              <span className={p === round.dealer && forbidden !== null ? 'hint hint--warn' : 'hint'}>{noteFor(p)}</span>
+              <span className={hintClass(p)}>{noteFor(p)}</span>
             </span>
             <Stepper
               label={`${name}, ${isBids ? t.bid : t.tricks}`}
@@ -56,7 +58,11 @@ export default function RoundEntry({ players, totals, round, current, hookRule, 
 
       <div className="actions actions--fill">
         {!isBids && (
-          <button type="button" className="button button--secondary" onClick={() => dispatch({ type: 'BACK_TO_BIDS' })}>
+          <button
+            type="button"
+            className="button button--secondary"
+            onClick={() => dispatch({ type: 'BACK_TO_BIDS' })}
+          >
             {t.back}
           </button>
         )}

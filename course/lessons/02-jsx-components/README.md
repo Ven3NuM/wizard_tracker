@@ -91,6 +91,56 @@ import Setup from './Setup'
 2. Σβήσε το `/` από ένα `<input />`. Τι λάθος δείχνει το Vite στη σελίδα;
 3. Βγάλε το `<Setup />` σε δύο σημεία μέσα στο `App`. Ένα component ξαναχρησιμοποιείται όσες φορές θέλεις.
 
+## Ασκήσεις
+
+**1. Ένα component σε δικό του αρχείο.** Βγάλε το checkbox του κανόνα hook (όλο το `<label>`) σε νέο
+αρχείο `HookRuleOption.jsx` και χρησιμοποίησέ το μέσα στο `Setup`.
+
+<details>
+<summary>Λύση</summary>
+
+`HookRuleOption.jsx`:
+
+```jsx
+export default function HookRuleOption() {
+  return (
+    <label className="setup__group checkbox">
+      <input type="checkbox" />
+      <span>
+        Κανόνας hook
+        <small className="hint">Οι δηλώσεις δεν μπορούν να είναι ίσες με τα φύλλα, ο dealer δηλώνει τελευταίος.</small>
+      </span>
+    </label>
+  )
+}
+```
+
+Στο `Setup.jsx`:
+
+```jsx
+import HookRuleOption from './HookRuleOption'
+…
+      </ol>
+
+      <HookRuleOption />
+```
+
+</details>
+
+**2. Υπολογισμός μέσα στο JSX.** Κάτω από το κουμπί «Έναρξη», δείξε πόσους γύρους θα έχει ένα
+παιχνίδι με 3 παίκτες. Ο αριθμός να υπολογίζεται στο JSX από τα 60 φύλλα, όχι να γράφεται «20».
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+<p className="hint hint--center">{60 / 3} γύροι</p>
+```
+
+Μέσα στα `{}` μπαίνει οποιαδήποτε έκφραση JavaScript. Στο μάθημα 3 το 3 θα γίνει μεταβλητή.
+
+</details>
+
 ## Σύνοψη
 
 - Το JSX είναι JavaScript: `className`, κλειστά tags, `{ }` για τιμές.

@@ -97,9 +97,9 @@ describe('scores', () => {
 
   it('ranks by total, ties share a place', () => {
     expect(ranking(['A', 'B', 'C'], [20, 50, 50])).toEqual([
-      { name: 'B', total: 50, place: 1 },
-      { name: 'C', total: 50, place: 1 },
-      { name: 'A', total: 20, place: 3 },
+      { seat: 1, name: 'B', total: 50, place: 1 },
+      { seat: 2, name: 'C', total: 50, place: 1 },
+      { seat: 0, name: 'A', total: 20, place: 3 },
     ])
   })
 })
@@ -118,6 +118,12 @@ describe('end of game stats', () => {
 
   it('finds the best single round', () => {
     expect(bestRound(table)).toEqual({ player: 1, points: 40 })
+    // On a tie the earlier round wins: +30 in round 1 beats +30 in round 2
+    const tie = scoreTable([
+      { bids: [1, 0, 0], tricks: [1, 0, 0] },
+      { bids: [0, 1, 0], tricks: [0, 1, 0] },
+    ])
+    expect(bestRound(tie)).toEqual({ player: 0, points: 30 })
     expect(bestRound([])).toBeNull()
   })
 })

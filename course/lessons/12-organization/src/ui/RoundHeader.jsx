@@ -1,9 +1,7 @@
 import { totalRounds } from '../game/rules'
-import { useTranslation } from '../i18n'
 
 // Where we are in the game, how many cards are dealt and who deals; children sit right of the title
 export default function RoundHeader({ players, round, children }) {
-  const { t } = useTranslation()
   const total = totalRounds(players.length)
 
   const stepClass = (i) => {
@@ -15,7 +13,7 @@ export default function RoundHeader({ players, round, children }) {
   return (
     <section className="round">
       <div className="round__bar">
-        <h1 className="round__label">{t.roundOf(round.index + 1, total)}</h1>
+        <h1 className="round__label">Γύρος {round.index + 1} από {total}</h1>
         {children}
       </div>
       <div className="round__progress" aria-hidden="true">
@@ -26,12 +24,12 @@ export default function RoundHeader({ players, round, children }) {
       <div className="round__hero">
         <p className="round__cards">
           <strong>{round.cards}</strong>
-          {t.cardsWord(round.cards)}
+          {round.cards === 1 ? 'φύλλο' : 'φύλλα'}
         </p>
         <div>
-          <p className="hint">{t.dealer}</p>
+          <p className="hint">Μοιράζει</p>
           <p className="round__dealer">{players[round.dealer]}</p>
-          <p className="hint">{t.firstBidderIs(players[round.firstBidder])}</p>
+          <p className="hint">Ξεκινά: {players[round.firstBidder]}</p>
         </div>
       </div>
     </section>

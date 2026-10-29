@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { PLAYER_COUNTS, replaceAt, totalRounds, validatePlayers } from '../game/rules'
-import { useTranslation } from '../i18n'
 import Avatar from './Avatar'
 import { ArrowIcon, DiceIcon } from './icons'
+
+const errorMessages = {
+  missingName: () => 'Κάθε παίκτης χρειάζεται όνομα.',
+  duplicateName: () => 'Τα ονόματα πρέπει να είναι διαφορετικά.',
+}
 
 // Keeps names short enough for the scoreboard columns
 const MAX_NAME_LENGTH = 20
 
 export default function Setup({ initialSetup, onStart }) {
-  const { errorMessage, t } = useTranslation()
   const [names, setNames] = useState(initialSetup?.players ?? ['', '', ''])
   const [firstDealer, setFirstDealer] = useState(initialSetup?.firstDealer ?? 0)
   const [hookRule, setHookRule] = useState(initialSetup?.hookRule ?? false)
@@ -39,11 +42,11 @@ export default function Setup({ initialSetup, onStart }) {
 
   return (
     <form className="setup" onSubmit={handleSubmit} noValidate>
-      <h2 className="setup__title">{t.newGame}</h2>
-      <p className="setup__subtitle">{t.setupSubtitle}</p>
+      <h2 className="setup__title">Νέο παιχνίδι</h2>
+      <p className="setup__subtitle">Ποιοι παίζουν απόψε;</p>
 
       <fieldset className="setup__group">
-        <legend className="label label--caps">{t.playerCount}</legend>
+        <legend className="label label--caps">Παίκτες</legend>
         <div className="segmented">
           {PLAYER_COUNTS.map((count) => (
             <button
@@ -66,23 +69,23 @@ export default function Setup({ initialSetup, onStart }) {
             <button
               type="button"
               className="setup__pick"
-              aria-label={t.chooseDealer(name.trim() || t.playerName(i + 1))}
+              aria-label={`${name.trim() || `Παίκτης ${i + 1}`} μοιράζει πρώτος`}
               aria-pressed={i === firstDealer}
               onClick={() => setFirstDealer(i)}
             >
               <Avatar name={name} index={i} />
             </button>
             <label className="label">
-              <span className="visually-hidden">{t.playerName(i + 1)}</span>
+              <span className="visually-hidden">Παίκτης {i + 1}</span>
               <input
                 className="input"
                 value={name}
-                placeholder={t.playerName(i + 1)}
+                placeholder={`Παίκτης ${i + 1}`}
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(event) => changeName(i, event.target.value)}
               />
             </label>
-            {i === firstDealer && <span className="badge">{t.dealer}</span>}
+            {i === firstDealer && <span className="badge">Μοιράζει</span>}
           </li>
         ))}
       </ol>
@@ -93,22 +96,27 @@ export default function Setup({ initialSetup, onStart }) {
         onClick={() => setFirstDealer(Math.floor(Math.random() * names.length))}
       >
         <DiceIcon />
-        {t.drawDealer}
+        Κλήρωση dealer
       </button>
 
       <label className="setup__group checkbox">
-        <input type="checkbox" role="switch" checked={hookRule} onChange={(event) => setHookRule(event.target.checked)} />
+        <input
+          type="checkbox"
+          role="switch"
+          checked={hookRule}
+          onChange={(event) => setHookRule(event.target.checked)}
+        />
         <span>
-          {t.hookRule}
-          <small className="hint">{t.hookRuleHelp}</small>
+          Κανόνας hook
+          <small className="hint">Οι δηλώσεις δεν βγαίνουν ίσες με τα φύλλα</small>
         </span>
       </label>
 
-      {error && <p className="error">{errorMessage(error)}</p>}
+      {error && <p className="error">{errorMessages[error.type](error)}</p>}
 
       <div className="actions">
         <button type="submit" className="button button--block">
-          {t.startGame} · {t.roundsCount(totalRounds(names.length))}
+          Έναρξη · {totalRounds(names.length)} γύροι
           <ArrowIcon />
         </button>
       </div>

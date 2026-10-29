@@ -23,8 +23,8 @@ export const roundScore = (bid, tricks) =>
 
 // Hook rule: the dealer may not bid the number that makes the bids add up to the cards
 export const forbiddenDealerBid = (bids, { cards, dealer }) => {
-  const others = sum(bids) - bids[dealer]
-  return cards - others >= 0 ? cards - others : null
+  const forbidden = cards - (sum(bids) - bids[dealer])
+  return forbidden >= 0 ? forbidden : null
 }
 
 // Validation returns null or { type, ...data }; the UI turns it into text (see i18n)
@@ -46,16 +46,20 @@ export const tricksError = (tricks, { cards }) => {
   return total === cards ? null : { type: 'tricksSum', total, cards }
 }
 
-// Per round, per player: { bid, tricks, points, total } with a running total
+// Per round, per player: { bid, tricks, points, total }. Each total builds on the round before.
+// `table` is a new array only this function sees, so filling it with push is fine.
 export const scoreTable = (rounds) => {
-  const totals = []
-  return rounds.map(({ bids, tricks }) =>
-    bids.map((bid, p) => {
+  const table = []
+  for (const { bids, tricks } of rounds) {
+    const previous = table.at(-1)
+    const row = bids.map((bid, p) => {
       const points = roundScore(bid, tricks[p])
-      totals[p] = (totals[p] ?? 0) + points
-      return { bid, tricks: tricks[p], points, total: totals[p] }
+      const total = (previous ? previous[p].total : 0) + points
+      return { bid, tricks: tricks[p], points, total }
     })
-  )
+    table.push(row)
+  }
+  return table
 }
 
 export const totalsOf = (table, playerCount) =>
@@ -66,16 +70,21 @@ export const hitsOf = (table, playerCount) =>
   Array.from({ length: playerCount }, (_, p) => table.filter((cells) => cells[p].points > 0).length)
 
 // The most points anyone scored in one round: { player, points }, the earliest on a tie
-export const bestRound = (table) =>
-  table.reduce((best, cells) => {
-    const top = Math.max(...cells.map((cell) => cell.points))
-    return best && best.points >= top ? best : { player: cells.findIndex((cell) => cell.points === top), points: top }
-  }, null)
+export const bestRound = (table) => {
+  let best = null
+  for (const cells of table) {
+    cells.forEach((cell, player) => {
+      if (best === null || cell.points > best.points) best = { player, points: cell.points }
+    })
+  }
+  return best
+}
 
-// Highest total first; players with the same total share a place
+// Highest total first; players with the same total share a place.
+// `seat` is the player's index in `players`: it identifies them, the name is only for showing.
 export const ranking = (players, totals) => {
   const sorted = players
-    .map((name, p) => ({ name, total: totals[p] }))
+    .map((name, seat) => ({ seat, name, total: totals[seat] }))
     .sort((a, b) => b.total - a.total)
   return sorted.map((entry) => ({
     ...entry,

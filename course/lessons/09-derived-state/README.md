@@ -43,20 +43,28 @@ export const roundScore = (bid, tricks) =>
 
 ```js
 export const scoreTable = (rounds) => {
-  const totals = []
-  return rounds.map(({ bids, tricks }) =>
-    bids.map((bid, p) => {
+  const table = []
+  for (const { bids, tricks } of rounds) {
+    const previous = table.at(-1)
+    const row = bids.map((bid, p) => {
       const points = roundScore(bid, tricks[p])
-      totals[p] = (totals[p] ?? 0) + points
-      return { bid, tricks: tricks[p], points, total: totals[p] }
+      const total = (previous ? previous[p].total : 0) + points
+      return { bid, tricks: tricks[p], points, total }
     })
-  )
+    table.push(row)
+  }
+  return table
 }
 ```
 
-Δύο `map`, το ένα μέσα στο άλλο: για κάθε γύρο, για κάθε παίκτη, ένα κελί. Το `totals` είναι τοπικός
-πίνακας της συνάρτησης. Τον αλλάζουμε, αλλά δεν ξεφεύγει προς τα έξω, οπότε η συνάρτηση μένει
-καθαρή: ίδιοι γύροι, ίδιος πίνακας.
+Για κάθε γύρο φτιάχνουμε μια γραμμή, με ένα κελί ανά παίκτη. Το σύνολο κάθε κελιού είναι το σύνολο του
+ίδιου παίκτη στην **προηγούμενη** γραμμή (`previous[p].total`) συν τους πόντους αυτού του γύρου. Στον
+πρώτο γύρο δεν υπάρχει προηγούμενη γραμμή, οπότε ξεκινάμε από 0.
+
+«Μα το `push` αλλάζει πίνακα, δεν το αποφεύγαμε;» Το αποφεύγουμε για το **state** (μάθημα 4), γιατί
+εκείνον τον πίνακα τον μοιράζεται όλη η εφαρμογή. Το `table` το φτιάχνει η ίδια η συνάρτηση και κανείς
+άλλος δεν το έχει δει ακόμα, οπότε το γεμίζουμε όπως θέλουμε. Η συνάρτηση μένει καθαρή: δεν αλλάζει
+τίποτα έξω από αυτήν, και ίδιοι γύροι δίνουν πάντα ίδιο πίνακα.
 
 Τα σύνολα είναι η τελευταία γραμμή του πίνακα:
 
@@ -73,7 +81,7 @@ export const totalsOf = (table, playerCount) =>
 ```js
 export const ranking = (players, totals) => {
   const sorted = players
-    .map((name, p) => ({ name, total: totals[p] }))
+    .map((name, seat) => ({ seat, name, total: totals[seat] }))
     .sort((a, b) => b.total - a.total)
   return sorted.map((entry) => ({
     ...entry,
@@ -86,6 +94,10 @@ export const ranking = (players, totals) => {
   σε **νέο** πίνακα (αυτόν που έφτιαξε το `map`), όχι σε δεδομένα του state.
 - Η θέση κάθε παίκτη είναι η **πρώτη** θέση όπου εμφανίζεται το σκορ του. Δύο παίκτες με 200 είναι και
   οι δύο 1οι, και ο επόμενος είναι 3ος, όπως στον αθλητισμό.
+- Κάθε παίκτης κρατάει και το `seat`, τη θέση του στο τραπέζι (0, 1, 2…). Μετά την ταξινόμηση η σειρά
+  αλλάζει, και το `seat` είναι αυτό που μας λέει ποιος είναι ποιος: το χρησιμοποιούμε ως `key` στη
+  λίστα και για να βρούμε το χρώμα του παίκτη. Το όνομα είναι για να το **δείχνουμε**, όχι για να
+  **αναγνωρίζουμε** κάποιον. Αν κάποτε επιτρέπαμε δύο «Γιώργους», όλα θα δούλευαν ακόμα.
 
 ## Ο κώδικας αυτού του μαθήματος
 
@@ -107,6 +119,48 @@ export const ranking = (players, totals) => {
 2. Άλλαξε το `roundScore` ώστε η ακριβής δήλωση να δίνει 10 + 10 ανά μπάζα. Όλος ο πίνακας και η
    κατάταξη αλλάζουν, χωρίς καμία άλλη αλλαγή.
 3. Φτιάξε ισοβαθμία για την πρώτη θέση και δες τα νούμερα θέσεων.
+
+## Ασκήσεις
+
+**1. Πόσες φορές πέτυχε ο καθένας.** Γράψε στο `rules.js` μια συνάρτηση `hitsOf(table, playerCount)` που
+επιστρέφει, για κάθε παίκτη, σε πόσους γύρους δήλωσε σωστά. Δείξ' το στην τελική κατάταξη («5/20»).
+
+<details>
+<summary>Λύση</summary>
+
+```js
+// How many rounds each player called exactly
+export const hitsOf = (table, playerCount) =>
+  Array.from({ length: playerCount }, (_, p) => table.filter((cells) => cells[p].points > 0).length)
+```
+
+Στο `FinalResults`, για κάθε γραμμή:
+
+```jsx
+const hits = hitsOf(table, players.length)
+…
+<span className="hint">{hits[seat]}/{table.length}</span>
+```
+
+Ένας γύρος είναι «επιτυχία» όταν οι πόντοι είναι θετικοί, και αυτό το ξέρουμε ήδη από τον πίνακα.
+Τίποτα νέο δεν αποθηκεύτηκε. Θα ξαναδείς αυτή τη συνάρτηση στο μάθημα 12.
+
+</details>
+
+**2. Μέσος όρος.** Στην τελική κατάταξη, δείξε δίπλα στο σύνολο και τον μέσο όρο πόντων ανά γύρο,
+στρογγυλεμένο.
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+<span className="hint">{Math.round(total / table.length)} ανά γύρο</span>
+```
+
+Ένας ακόμα υπολογισμός από δεδομένα που υπάρχουν. Αν τον αποθηκεύαμε, μια διόρθωση γύρου (μάθημα 11)
+θα τον άφηνε λάθος.
+
+</details>
 
 ## Σύνοψη
 

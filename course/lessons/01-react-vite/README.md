@@ -51,7 +51,7 @@ export default function App() {
 - **στην ανάπτυξη** (`npm run dev`) σερβίρει την εφαρμογή, μετατρέπει το JSX σε JavaScript τη στιγμή
   που ζητιέται, και ανανεώνει τη σελίδα μόλις αποθηκεύσεις ένα αρχείο (hot reload),
 - **στο τέλος** (`npm run build`) πακετάρει τα πάντα σε λίγα, μικρά αρχεία στον φάκελο `dist/`,
-  έτοιμα για τον κόσμο (μάθημα 14).
+  έτοιμα για τον κόσμο (μάθημα 15).
 
 ## Πώς ξεκινάει η εφαρμογή
 
@@ -107,6 +107,61 @@ export default function App() {
 1. Τρέξε `npm run lesson 1` και άνοιξε τη σελίδα.
 2. Άλλαξε το κείμενο στο `App.jsx` και αποθήκευσε. Η σελίδα αλλάζει χωρίς refresh.
 3. Γράψε `{2 + 3}` μέσα στο `<p>`. Τι εμφανίζεται;
+
+## Ασκήσεις
+
+Κάθε μάθημα κλείνει με δύο ασκήσεις. Γράψε τη λύση μόνος σου στον κώδικα του μαθήματος, και άνοιξε τη
+δική μας μόνο αφού δοκιμάσεις. Αν χαλάσει κάτι, `git checkout course/` τα επαναφέρει όλα.
+
+**1. Και η ώρα.** Κάτω από την παράγραφο με την ημερομηνία, πρόσθεσε μία ακόμα με την ώρα που
+σχεδιάστηκε το component (`new Date().toLocaleTimeString('el-GR')`).
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+export default function App() {
+  const today = new Date().toLocaleDateString('el-GR')
+  const time = new Date().toLocaleTimeString('el-GR')
+
+  return (
+    <main className="app">
+      <h1 className="app__title">Wizard Tracker</h1>
+      <p className="hint hint--center">Το πρώτο μας component, σήμερα {today}.</p>
+      <p className="hint hint--center">Ώρα: {time}</p>
+    </main>
+  )
+}
+```
+
+Η ώρα δεν «τρέχει»: το component σχεδιάστηκε μία φορά. Για να ξανασχεδιάζεται χρειάζεται state
+(μάθημα 3) και ένα timer (μάθημα 10).
+
+</details>
+
+**2. Δεύτερο component.** Στο ίδιο αρχείο, γράψε ένα component `Footer` που δείχνει «Φτιαγμένο με
+React» και βάλ' το κάτω από τις παραγράφους.
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+function Footer() {
+  return <p className="hint hint--center">Φτιαγμένο με React</p>
+}
+
+export default function App() {
+  …
+      <Footer />
+    </main>
+  )
+}
+```
+
+Ένα component είναι απλώς μια συνάρτηση που επιστρέφει JSX, με όνομα που ξεκινάει με κεφαλαίο. Το
+`export` δεν χρειάζεται, αφού το χρησιμοποιεί μόνο το ίδιο αρχείο.
+
+</details>
 
 ## Σύνοψη
 

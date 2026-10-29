@@ -20,8 +20,8 @@ export const roundInfo = (index, playerCount, firstDealer) => {
 
 // Hook rule: the dealer may not bid the number that makes the bids add up to the cards
 export const forbiddenDealerBid = (bids, { cards, dealer }) => {
-  const others = sum(bids) - bids[dealer]
-  return cards - others >= 0 ? cards - others : null
+  const forbidden = cards - (sum(bids) - bids[dealer])
+  return forbidden >= 0 ? forbidden : null
 }
 
 // Validation returns null when valid, otherwise { type, ...data } describing the problem

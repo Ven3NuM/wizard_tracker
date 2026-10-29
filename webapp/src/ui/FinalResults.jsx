@@ -12,7 +12,6 @@ export default function FinalResults({ players, table, onRematch, onNewGame }) {
   const hits = hitsOf(table, players.length)
   const sharpest = hits.indexOf(Math.max(...hits))
   const best = bestRound(table)
-  const seat = (name) => players.indexOf(name)
 
   return (
     <section className="results">
@@ -21,9 +20,9 @@ export default function FinalResults({ players, table, onRematch, onNewGame }) {
 
       {/* The first three stand on a podium (second, first, third on screen), the rest follow in a list */}
       <ol className="podium">
-        {results.slice(0, PODIUM).map(({ name, total, place }) => (
-          <li key={name} className={`podium__step podium__step--place-${place}`}>
-            <Avatar name={name} index={seat(name)} />
+        {results.slice(0, PODIUM).map(({ seat, name, total, place }) => (
+          <li key={seat} className={`podium__step podium__step--place-${place}`}>
+            <Avatar name={name} index={seat} />
             <span className="podium__name">{name}</span>
             <span className="podium__block">
               <span className="podium__place">{place}</span>
@@ -35,8 +34,8 @@ export default function FinalResults({ players, table, onRematch, onNewGame }) {
 
       {results.length > PODIUM && (
         <ol className="results__list" start={PODIUM + 1}>
-          {results.slice(PODIUM).map(({ name, total, place }) => (
-            <li key={name} style={{ '--avatar': `var(--player-${seat(name) + 1})` }}>
+          {results.slice(PODIUM).map(({ seat, name, total, place }) => (
+            <li key={seat} style={{ '--avatar': `var(--player-${seat + 1})` }}>
               <span className="results__place">{place}</span>
               <span className="dot" aria-hidden="true" />
               <span className="results__name">{name}</span>

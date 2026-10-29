@@ -1,20 +1,20 @@
-# Μάθημα 12 · Οργάνωση, δύο γλώσσες και Context
+# Μάθημα 12 · Οργάνωση σε φακέλους και η τελική εμφάνιση
 
-**Στόχοι:** να οργανώσεις ένα project ώστε να βρίσκεις αμέσως κάθε πράγμα, να βγάλεις τα κείμενα της
-οθόνης σε ένα μέρος, να προσθέσεις αγγλικά με επιλογή γλώσσας, και να μάθεις το **Context**: πώς
-φτάνει μια τιμή σε όλα τα components χωρίς να περνάει από props.
+**Στόχοι:** να οργανώσεις ένα project ώστε να βρίσκεις αμέσως κάθε πράγμα, να χωρίσεις τη λογική από
+την εμφάνιση, να γνωρίσεις το prop `children`, και να δεις πώς μεγαλώνει μια οθόνη με μικρά components
+χωρίς να μεγαλώνει η πολυπλοκότητα.
 
 ```bash
 npm run lesson 12
 ```
 
-Ο κώδικας αυτού του μαθήματος είναι **ίδιος με το `webapp/src`** (χωρίς τα tests, που είναι το θέμα
-του μαθήματος 13). Η μόνη νέα λειτουργία είναι η επιλογή γλώσσας. Τα υπόλοιπα είναι τακτοποίηση.
+Με το μάθημα 11 η εφαρμογή έκανε ήδη ό,τι και η τελική. Εδώ δεν μαθαίνουμε νέα hooks. Τακτοποιούμε,
+και ολοκληρώνουμε την εμφάνιση με μερικά μικρά components.
 
 ## Από επίπεδο φάκελο σε φακέλους με ρόλο
 
-Ως το μάθημα 11 όλα ήταν σε ένα `src/` με 11 αρχεία. Δουλεύει, αλλά δεν λέει τίποτα για το ποιο
-αρχείο κάνει τι. Το τελικό σχήμα:
+Ως το μάθημα 11 όλα ήταν σε ένα `src/` με 12 αρχεία. Δουλεύει, αλλά δεν λέει τίποτα για το ποιο
+αρχείο κάνει τι. Το νέο σχήμα:
 
 ```
 src/
@@ -25,137 +25,116 @@ src/
 ├── ui/                τα components
 │   ├── Setup.jsx
 │   ├── GameScreen.jsx
-│   ├── RoundHeader.jsx  γύρος, φύλλα, dealer
-│   ├── GameMenu.jsx   το μενού ⋯ (popover)
+│   ├── RoundHeader.jsx    γύρος, φύλλα, dealer
+│   ├── GameMenu.jsx       το μενού ⋯
 │   ├── RoundEntry.jsx
-│   ├── Standings.jsx  η κατάταξη
+│   ├── Standings.jsx      η κατάταξη στη διάρκεια του παιχνιδιού
 │   ├── Scoreboard.jsx
 │   ├── EditRoundDialog.jsx
 │   ├── FinalResults.jsx
 │   ├── Stepper.jsx
-│   ├── LanguageSwitch.jsx  ΕΛ / EN στην κεφαλίδα
-│   ├── Avatar.jsx     το αρχικό του παίκτη στο χρώμα της θέσης του
-│   ├── icons.jsx      μικρά εικονίδια SVG
-│   └── format.js      +20 / -10
-├── i18n/              τα κείμενα της οθόνης
-│   ├── el.js, en.js   ελληνικά, αγγλικά
-│   ├── index.js       οι γλώσσες, το Context, το useTranslation
-│   └── LanguageProvider.jsx
+│   ├── Avatar.jsx         το αρχικό του παίκτη στο χρώμα της θέσης του
+│   ├── icons.jsx          μικρά εικονίδια SVG
+│   └── format.js          +20 / -10
 ├── App.jsx            ρυθμίσεις ή παιχνίδι
 ├── main.jsx           εκκίνηση
-├── native.js          κουμπί «πίσω» και οθόνη ανοιχτή, μόνο στο Android/iOS app (μάθημα 15)
 └── index.css          όλα τα styles
 ```
 
 Η βασική διάκριση είναι **λογική ↔ εμφάνιση**:
 
 - Ο φάκελος `game/` δεν εισάγει **τίποτα** από τον `ui/`. Οι κανόνες δεν ξέρουν ότι υπάρχει οθόνη,
-  οπότε θα δούλευαν αυτούσιοι και σε μια εφαρμογή κινητού, ένα bot ή ένα test.
+  οπότε θα δούλευαν αυτούσιοι σε μια εφαρμογή κινητού, ένα bot ή ένα test.
 - Ο φάκελος `ui/` εισάγει από τον `game/` ό,τι χρειάζεται για να δείξει.
 
+Τα imports αλλάζουν μόνο στη διαδρομή: `import { sum } from './rules'` γίνεται
+`import { sum } from '../game/rules'` (το `..` σημαίνει «ένας φάκελος πάνω»).
+
 Πόσους φακέλους να φτιάξεις; **Όσους χρειάζεσαι για να βρίσκεις τα πράγματα, όχι περισσότερους.**
-Επτά components χωράνε άνετα σε έναν φάκελο. Υποφακέλους `ui/game/`, `ui/setup/` θα τους φτιάχναμε αν
+Δεκατρία αρχεία χωράνε άνετα στον `ui/`. Υποφακέλους `ui/game/`, `ui/setup/` θα τους φτιάχναμε αν
 γίνονταν τριάντα. Η υπερβολική δομή είναι κι αυτή ακαταστασία.
 
-## Τα κείμενα σε ένα μέρος
+## Τα νέα components
 
-Μέχρι τώρα τα ελληνικά ήταν σκορπισμένα μέσα στο JSX, και τα μηνύματα λάθους σε τρία διαφορετικά
-`errorMessages`. Τώρα όλα ζουν στο `i18n/el.js` (το i18n σημαίνει «internationalization»: i + 18
-γράμματα + n):
-
-```js
-const el = {
-  startGame: 'Έναρξη',
-  playerName: (n) => `Παίκτης ${n}`,
-  tricksRemaining: (n) => (n === 1 ? 'Απομένει 1 μπάζα' : `Απομένουν ${n} μπάζες`),
-  errors: {
-    missingName: () => 'Κάθε παίκτης χρειάζεται όνομα.',
-    hook: ({ forbidden }) => `Κανόνας hook: ο dealer δεν μπορεί να δηλώσει ${forbidden}.`,
-    …
-  },
-}
-```
-
-- Τα σταθερά κείμενα είναι strings. Όσα έχουν αριθμούς ή ονόματα είναι **συναρτήσεις**, γιατί η
-  γραμματική (ενικός/πληθυντικός, σειρά λέξεων) διαφέρει από γλώσσα σε γλώσσα.
-- Το `en.js` έχει **ακριβώς τα ίδια κλειδιά**. Ένα test (`i18n.test.js`, μάθημα 13) το ελέγχει, ώστε
-  να μην ξεχαστεί ποτέ μια μετάφραση.
-- Τα λάθη: οι κανόνες επιστρέφουν `{ type: 'hook', forbidden: 1 }` (μάθημα 5), και το
-  `errorMessage(error)` βρίσκει το κείμενο από το `type`, στη γλώσσα που είναι επιλεγμένη. Οι κανόνες
-  δεν άλλαξαν καθόλου για να αποκτήσει η εφαρμογή δεύτερη γλώσσα. Αυτό είναι το κέρδος του «όχι
-  κείμενα στους κανόνες».
-
-## Context: μια τιμή για όλη την εφαρμογή
-
-Η γλώσσα αλλάζει την ώρα που τρέχει η εφαρμογή, άρα είναι **state**. Αλλά τη χρειάζονται **όλα** τα
-components, μέχρι και το `Stepper` τρία επίπεδα πιο κάτω. Με όσα ξέρουμε ως τώρα (μάθημα 6) θα έπρεπε
-να την ανεβάσουμε στο `App` και να την περνάμε με props σε κάθε component, και από εκεί σε κάθε παιδί
-του. Αυτό λέγεται **prop drilling**: props που περνάνε από components που δεν τα χρειάζονται, μόνο για
-να φτάσουν πιο κάτω.
-
-Το **Context** λύνει ακριβώς αυτό. Ένα component «παρέχει» μια τιμή, και όποιο component από κάτω του
-τη θέλει, τη «διαβάζει» απευθείας, όσο βαθιά κι αν είναι.
-
-**1. Φτιάχνεις το context** (`i18n/index.js`):
-
-```js
-export const LanguageContext = createContext(null)
-export const useTranslation = () => useContext(LanguageContext)
-```
-
-**2. Ένα component το παρέχει** (`i18n/LanguageProvider.jsx`): κρατάει τη γλώσσα σε state και τη
-δίνει, μαζί με τα κείμενα, σε όλα τα παιδιά του:
+Η τελική οθόνη έχει περισσότερα πράγματα: την κεφαλίδα του γύρου, ένα μενού, την κατάταξη, χρωματιστά
+αρχικά για κάθε παίκτη, βάθρο στο τέλος. Κάθε ένα είναι **ξεχωριστό, μικρό component** με ένα έργο.
+Το `GameScreen` απλώς τα βάζει στη σειρά:
 
 ```jsx
-export default function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(initialLanguage)
-  const t = LANGUAGES[language]
+<RoundHeader players={players} round={round}>
+  <GameMenu onNewGame={handleNewGame} />
+</RoundHeader>
+<RoundEntry … />
+{table.length > 0 && <Standings players={players} table={table} />}
+```
+
+Κανένα δεν χρειάζεται κάτι που δεν ξέρεις: props, `map`, εμφάνιση υπό συνθήκη. Αξίζει να δεις τρία
+σημεία.
+
+### `children`: ό,τι βάζεις ανάμεσα στα tags
+
+Στο `RoundHeader` το `GameMenu` είναι γραμμένο **μέσα** στο `<RoundHeader>…</RoundHeader>`, όπως ένα
+`<li>` μέσα σε `<ul>`. Ό,τι γράφεις εκεί φτάνει στο component ως ένα ειδικό prop, το `children`:
+
+```jsx
+export default function RoundHeader({ players, round, children }) {
+  return (
+    <section className="round">
+      <div className="round__bar">
+        <h1 className="round__label">Γύρος {round.index + 1} από {total}</h1>
+        {children}
+      </div>
+      …
+```
+
+Το `RoundHeader` δεν ξέρει τι είναι αυτό που του δόθηκε. Ξέρει μόνο **πού** να το βάλει (δεξιά από τον
+τίτλο). Έτσι το ίδιο component θα μπορούσε αύριο να δείξει εκεί ένα κουμπί ρυθμίσεων, χωρίς αλλαγή.
+Θα ξαναδούμε το `children` στο μάθημα 13, στο component που τυλίγει όλη την εφαρμογή.
+
+### Ο browser κάνει τη δουλειά: `popover`
+
+Το μενού ⋯ δεν έχει καθόλου state:
+
+```jsx
+<button type="button" className="icon-button" aria-label="Μενού" popoverTarget="game-menu">
+  <MoreIcon />
+</button>
+<div id="game-menu" className="menu" popover="auto">
+  <button type="button" className="menu__item" onClick={onNewGame}>
+    Νέο παιχνίδι
+  </button>
+</div>
+```
+
+Το `popover="auto"` λέει στον browser: αυτό είναι αναδυόμενο, άνοιξέ το όταν πατηθεί το κουμπί με
+`popoverTarget`, και κλείσ' το με Escape ή με κλικ αλλού. Ό,τι κάναμε με το `<dialog>` στο μάθημα 11:
+πρώτα κοιτάς τι κάνει ήδη ο browser.
+
+### Μεταβλητή CSS από τη React
+
+Κάθε παίκτης έχει χρώμα ανάλογα με τη θέση του (`--player-1` … `--player-6` στο `index.css`). Το
+`Avatar` δεν έχει έξι κλάσεις. Ορίζει μια μεταβλητή CSS με το `style`, και το CSS τη χρησιμοποιεί:
+
+```jsx
+<span className="avatar" style={{ '--avatar': `var(--player-${index + 1})` }} aria-hidden="true">
+  {name.trim().charAt(0).toUpperCase() || index + 1}
+</span>
+```
+
+Το `style` στη React παίρνει **αντικείμενο** (γι' αυτό τα διπλά `{{ }}`: το εξωτερικό για «JavaScript
+εδώ», το εσωτερικό είναι το αντικείμενο).
+
+### Η κατάταξη και το `seat`
+
+Το `ranking()` (μάθημα 9) επιστρέφει για κάθε παίκτη και το `seat`, τη θέση του στο τραπέζι. Μετά την
+ταξινόμηση είναι ο μόνος σίγουρος τρόπος να ξέρεις ποιος είναι ποιος. Το `Standings` το χρησιμοποιεί
+για το `key`, για το χρώμα και για να βρει τους πόντους του τελευταίου γύρου:
+
+```jsx
+{results.map(({ seat, name, total, place }) => {
+  const { points } = lastRound[seat]
   …
-  return <LanguageContext value={{ language, setLanguage, t, errorMessage }}>{children}</LanguageContext>
-}
 ```
-
-Το `children` είναι ένα ειδικό prop: ό,τι γράψεις ανάμεσα στο `<LanguageProvider>` και το
-`</LanguageProvider>`. Στο `main.jsx` τυλίγουμε όλη την εφαρμογή:
-
-```jsx
-<LanguageProvider>
-  <App />
-</LanguageProvider>
-```
-
-**3. Όποιο component θέλει, το διαβάζει**:
-
-```jsx
-export default function Stepper({ label, value, max, onChange }) {
-  const { t } = useTranslation()
-  …
-}
-```
-
-Όταν πατηθεί «EN», το `setLanguage('en')` αλλάζει το state του provider, και η React ξανασχεδιάζει
-**κάθε component που διαβάζει το context**, με τα αγγλικά κείμενα. Κανένα prop δεν πέρασε από πουθενά.
-
-Ο provider κάνει και δύο μικρά πράγματα με ένα effect (μάθημα 10): θυμάται την επιλογή στο
-`localStorage` και ενημερώνει το `<html lang="…">`, για τους screen readers και τη μετάφραση του
-browser. Την πρώτη φορά, η γλώσσα βγαίνει από τη γλώσσα της συσκευής (`navigator.language`).
-
-### Πότε Context και πότε props
-
-Το Context είναι βολικό, αλλά κρύβει από πού έρχονται τα δεδομένα: κοιτάζοντας το `<Stepper … />` δεν
-βλέπεις ότι εξαρτάται από τη γλώσσα. Γι' αυτό:
-
-- **Props** για ό,τι αφορά συγκεκριμένα components: τα δεδομένα του παιχνιδιού, το `onChange` ενός
-  stepper. Η ροή φαίνεται στον κώδικα.
-- **Context** για ό,τι είναι πραγματικά **καθολικό**: γλώσσα, θέμα (σκούρο/ανοιχτό), συνδεδεμένος χρήστης.
-
-Γι' αυτό το παιχνίδι συνεχίζει να περνάει με props, ενώ η γλώσσα με Context.
-
-### Ένα μικρό τεχνικό σημείο
-
-Το context ζει στο `index.js` και ο provider σε ξεχωριστό `.jsx`. Ο λόγος: το hot reload του Vite
-δουλεύει σωστά μόνο όταν ένα αρχείο εξάγει **μόνο components**, και το ESLint σε προειδοποιεί αν
-ανακατέψεις components με άλλα exports.
 
 ## Τα styles
 
@@ -173,30 +152,90 @@ browser. Την πρώτη φορά, η γλώσσα βγαίνει από τη 
 
 ## Ένα checklist καθαρού κώδικα
 
-Όσα εφαρμόσαμε σε όλο το μάθημα, μαζεμένα:
+Όσα εφαρμόσαμε ως εδώ, μαζεμένα:
 
 1. **Αποθήκευσε μόνο ό,τι εισάγει ο χρήστης.** Υπολόγισε τα υπόλοιπα (dealer, σκορ, `isDirty`).
 2. **Κανόνες σε καθαρές συναρτήσεις**, έξω από τα components.
 3. **Μία πηγή αλήθειας** για κάθε πληροφορία (`names.length`, όχι και `playerCount`).
 4. **Τα δεδομένα κατεβαίνουν, τα γεγονότα ανεβαίνουν** (props / `onΚάτι`).
 5. **State όσο ψηλά χρειάζεται**, όχι ψηλότερα (το πρόχειρο του dialog μένει στο dialog).
-6. **Χρησιμοποίησε τον browser:** `<form>`, `<dialog>`, `<label>`, `aria-*`.
-7. **Ονόματα που λένε τι κάνουν:** `roundInfo`, `requestClose`, `isDirty`, όχι `data`, `handle2`, `flag`.
-8. **Σχόλια για το «γιατί»**, όχι για το «τι». Το «τι» το λέει ο κώδικας.
+6. **Χρησιμοποίησε τον browser:** `<form>`, `<dialog>`, `popover`, `<label>`, `aria-*`.
+7. **Ταυτότητα με id, όχι με κείμενο:** το `seat` αναγνωρίζει τον παίκτη, το όνομα απλώς φαίνεται.
+8. **Ονόματα που λένε τι κάνουν:** `roundInfo`, `requestClose`, `isDirty`, όχι `data`, `handle2`, `flag`.
+9. **Σχόλια για το «γιατί»**, όχι για το «τι». Το «τι» το λέει ο κώδικας.
+
+## Ο κώδικας αυτού του μαθήματος
+
+- **Φάκελοι `game/` και `ui/`**, και το `index.css` μέσα στο `src/`.
+- **Νέα components:** `RoundHeader`, `GameMenu`, `Standings`, `Avatar`, `icons.jsx`, και το `format.js`.
+- **`FinalResults.jsx`:** βάθρο για τους τρεις πρώτους και δύο στατιστικά, ο πιο εύστοχος και ο
+  μεγαλύτερος γύρος (`hitsOf`, `bestRound` στο `rules.js`).
+- **`Setup.jsx`:** ο πρώτος dealer διαλέγεται πατώντας το αρχικό του παίκτη.
+
+Τα κείμενα είναι ακόμα γραμμένα μέσα στα components, στα ελληνικά. Αυτό αλλάζει στο επόμενο μάθημα.
 
 ## Δοκίμασέ το
 
-1. Σύγκρινε το `src/` αυτού του μαθήματος με το `webapp/src/`. Είναι ίδια (εκτός από τα `*.test.js`).
-2. Πάτα «English», ξεκίνα παιχνίδι, κάνε refresh. Η γλώσσα μένει.
-3. Άλλαξε ένα κείμενο στο `en.js` και δες πού αλλάζει στην οθόνη.
-4. Ψάξε στον φάκελο `game/` για `import` από `../ui` ή `../i18n`. Δεν υπάρχει κανένα, και αυτό είναι σκόπιμο.
+1. Ψάξε στον φάκελο `game/` για `import` από `../ui`. Δεν υπάρχει κανένα, και αυτό είναι σκόπιμο.
+2. Άνοιξε το μενού ⋯ και πάτα Escape, ή κλικ έξω από αυτό. Κλείνει χωρίς ούτε μία γραμμή δικού μας κώδικα.
+3. Στο `index.css`, άλλαξε το `--player-1` σε `red`. Αλλάζουν μαζί το αρχικό στις ρυθμίσεις, η
+   τελεία στην κατάταξη και το βάθρο.
+
+## Ασκήσεις
+
+**1. Ένα δεύτερο παιδί στην κεφαλίδα.** Στο `GameScreen`, βάλε μέσα στο `<RoundHeader>` και ένα
+`<span className="badge">Hook</span>`, μόνο όταν ο κανόνας hook είναι ενεργός. Δεν χρειάζεται καμία
+αλλαγή στο `RoundHeader`. Γιατί;
+
+<details>
+<summary>Λύση</summary>
+
+```jsx
+<RoundHeader players={players} round={round}>
+  {hookRule && <span className="badge">Hook</span>}
+  <GameMenu onNewGame={handleNewGame} />
+</RoundHeader>
+```
+
+Το `RoundHeader` βάζει το `children` όπου κι αν είναι, χωρίς να ξέρει τι περιέχει. Ό,τι γράψεις ανάμεσα
+στα tags, ένα στοιχείο ή πολλά, είναι το `children`.
+
+</details>
+
+**2. Δεύτερη επιλογή στο μενού.** Πρόσθεσε στο `GameMenu` ένα κουμπί «Ρεβάνς» που ξεκινάει αμέσως
+νέο παιχνίδι με τους ίδιους παίκτες. Το action υπάρχει ήδη στον reducer.
+
+<details>
+<summary>Λύση</summary>
+
+Στο `GameMenu`, ένα νέο prop και ένα κουμπί:
+
+```jsx
+export default function GameMenu({ onNewGame, onRematch }) {
+  …
+  <button type="button" className="menu__item" onClick={onRematch}>
+    Ρεβάνς
+  </button>
+```
+
+Στο `GameScreen`:
+
+```jsx
+<GameMenu onNewGame={handleNewGame} onRematch={() => dispatch({ type: 'REMATCH' })} />
+```
+
+Το μενού δεν ξέρει τι κάνει το «Ρεβάνς». Στέλνει το γεγονός προς τα πάνω (μάθημα 6), και το
+`GameScreen`, που έχει το `dispatch`, αποφασίζει.
+
+</details>
 
 ## Σύνοψη
 
 - Χώρισε λογική (`game/`) από εμφάνιση (`ui/`). Η λογική δεν εισάγει ποτέ UI.
-- Όλα τα κείμενα σε ένα αρχείο ανά γλώσσα, με συναρτήσεις για όσα έχουν μεταβλητά κομμάτια.
-- Context για ό,τι είναι καθολικό (γλώσσα): `createContext`, provider, `useContext` μέσα σε δικό σου hook.
-- Props για όλα τα υπόλοιπα, γιατί κρατάνε τη ροή των δεδομένων ορατή.
 - Λίγοι φάκελοι με σαφή ρόλο είναι καλύτεροι από πολλούς «για το μέλλον».
+- Μια οθόνη μεγαλώνει με **περισσότερα μικρά components**, όχι με μεγαλύτερα.
+- `children`: ό,τι γράφεις ανάμεσα στα tags ενός component.
+- Πριν γράψεις κώδικα για κάτι που ανοίγει και κλείνει, δες αν το κάνει ήδη ο browser (`popover`, `<dialog>`).
 
-**Για παραπέρα:** [Passing data deeply with context](https://react.dev/learn/passing-data-deeply-with-context)
+**Για παραπέρα:** [Passing JSX as children](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children),
+[Thinking in React](https://react.dev/learn/thinking-in-react)

@@ -1,11 +1,11 @@
-# Μάθημα 13 · Testing: unit tests με Vitest, e2e με Playwright
+# Μάθημα 14 · Testing: unit tests με Vitest, e2e με Playwright
 
 **Στόχοι:** να γράφεις tests που σε αφήνουν να αλλάζεις κώδικα χωρίς φόβο, να ξέρεις τι αξίζει να
 ελέγχεις με unit tests και τι με e2e, και να τρέχεις και τα δύο.
 
 ```bash
-npm run lesson 13          # η εφαρμογή, όπως πάντα
-npm run lesson 13 test     # τα unit tests αυτού του μαθήματος
+npm run lesson 14          # η εφαρμογή, όπως πάντα
+npm run lesson 14 test     # τα unit tests αυτού του μαθήματος
 npm run test:e2e           # τα e2e tests της εφαρμογής (webapp/e2e)
 ```
 
@@ -111,7 +111,7 @@ npx playwright install chromium
 
 ## Ο κώδικας αυτού του μαθήματος
 
-Ίδιος με το μάθημα 12, συν:
+Ίδιος με το μάθημα 13, συν:
 
 - **`game/rules.test.js`:** κανόνες, βαθμολογία, κατάταξη.
 - **`game/reducer.test.js`:** κάθε action, και ένα ολόκληρο παιχνίδι μέχρι το τέλος.
@@ -119,9 +119,50 @@ npx playwright install chromium
 
 ## Δοκίμασέ το
 
-1. `npm run lesson 13 test`. Όλα πράσινα.
+1. `npm run lesson 14 test`. Όλα πράσινα.
 2. Χάλασε επίτηδες το `roundScore` (π.χ. `20 + 5 * tricks`) και ξανατρέξε. Διάβασε τι λέει το λάθος.
 3. Γράψε ένα test για το `totalRounds(4)`.
+
+## Ασκήσεις
+
+**1. Unit test για τον dealer.** Στο `rules.test.js`, γράψε ένα test: με 4 παίκτες και πρώτο dealer τη
+θέση 3, στον δεύτερο γύρο (index 1) μοιράζει η θέση 0 και δηλώνει πρώτη η θέση 1.
+
+<details>
+<summary>Λύση</summary>
+
+```js
+it('wraps the deal around the table', () => {
+  expect(roundInfo(1, 4, 3)).toEqual({ index: 1, cards: 2, dealer: 0, firstBidder: 1 })
+})
+```
+
+`npm run lesson 14 test`. Οι οριακές περιπτώσεις (εδώ: ο τελευταίος της σειράς δίνει τη σειρά στον
+πρώτο) είναι εκεί που κρύβονται τα bugs, και εκεί αξίζουν τα tests.
+
+</details>
+
+**2. E2E για το «Νέο παιχνίδι».** Στο `webapp/e2e/game.spec.js`, γράψε ένα test: ξεκινάει παιχνίδι,
+ανοίγει το μενού ⋯, πατάει «Νέο παιχνίδι», δέχεται την ερώτηση επιβεβαίωσης, και ελέγχει ότι γύρισε στην
+οθόνη των ρυθμίσεων.
+
+<details>
+<summary>Λύση</summary>
+
+```js
+test('starts over from the menu', async ({ page }) => {
+  await startGame(page, players)
+  page.once('dialog', (dialog) => dialog.accept())
+  await page.getByRole('button', { name: 'Μενού' }).click()
+  await page.getByRole('button', { name: 'Νέο παιχνίδι' }).click()
+  await expect(page.getByRole('heading', { name: 'Νέο παιχνίδι' })).toBeVisible()
+})
+```
+
+Το `page.once('dialog', …)` μπαίνει **πριν** από το κλικ που ανοίγει το `confirm`, αλλιώς το test
+περιμένει για πάντα. `npm run test:e2e` από τη ρίζα.
+
+</details>
 
 ## Σύνοψη
 

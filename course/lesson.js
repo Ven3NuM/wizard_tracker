@@ -1,4 +1,4 @@
-// Runs a lesson: npm run lesson 3 (in the browser), npm run lesson 13 test (its unit tests)
+// Runs a lesson: npm run lesson 3 (in the browser), npm run lesson 14 test (its unit tests)
 import { existsSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { createServer } from 'vite'

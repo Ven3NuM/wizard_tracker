@@ -1,4 +1,3 @@
-import { useTranslation } from '../i18n'
 import { formatPoints } from './format'
 
 // Columns are narrow, so the header shows the start of each name
@@ -6,15 +5,14 @@ const SHORT_NAME = 3
 
 // Rounds x players with running totals; tapping a round opens it for editing
 export default function Scoreboard({ players, table, onEditRound }) {
-  const { t } = useTranslation()
 
   return (
     <section className="scoreboard">
-      <h2 className="label label--caps">{t.editHint}</h2>
+      <h2 className="label label--caps">Γύροι · πάτα για διόρθωση</h2>
       <table className="scoreboard__table">
         <thead>
           <tr>
-            <th scope="col" className="scoreboard__round" aria-label={t.roundColumn}>
+            <th scope="col" className="scoreboard__round" aria-label="Γύρος">
               #
             </th>
             {players.map((name, p) => (
@@ -30,18 +28,21 @@ export default function Scoreboard({ players, table, onEditRound }) {
             <tr key={r} className="scoreboard__row" onClick={() => onEditRound(r)}>
               <td className="scoreboard__round">
                 {/* The whole row is tappable, the button makes it reachable by keyboard */}
-                <button type="button" className="scoreboard__edit" aria-label={t.editRound(r + 1)}>
+                <button type="button" className="scoreboard__edit" aria-label={`Διόρθωση γύρου ${r + 1}`}>
                   {r + 1}
                 </button>
               </td>
-              {cells.map((cell, p) => (
-                <td key={p}>
-                  <span className="scoreboard__cell-total">{cell.total}</span>
-                  <span className={`scoreboard__detail scoreboard__detail--${cell.points > 0 ? 'hit' : 'miss'}`}>
-                    {cell.bid}/{cell.tricks} {formatPoints(cell.points)}
-                  </span>
-                </td>
-              ))}
+              {cells.map((cell, p) => {
+                const result = cell.points > 0 ? 'hit' : 'miss'
+                return (
+                  <td key={p}>
+                    <span className="scoreboard__cell-total">{cell.total}</span>
+                    <span className={`scoreboard__detail scoreboard__detail--${result}`}>
+                      {cell.bid}/{cell.tricks} {formatPoints(cell.points)}
+                    </span>
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
